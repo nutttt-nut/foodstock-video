@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodStock Video — 4 Directions</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600;800&family=Caveat:wght@400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    padding: 40px 32px 80px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .header h1 {
+    font-size: 13px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 12px;
+  }
+  .header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .header p {
+    font-size: 14px;
+    color: #555;
+    margin-top: 8px;
+  }
+
+  /* ─── Grid ─── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card { display: flex; flex-direction: column; gap: 16px; }
+
+  .card-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .badge {
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .badge.photo { background: #2a3f2e; color: #7ec98a; }
+  .badge.video { background: #2e2a3f; color: #9a7ecc; }
+
+  .card-label h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e8e8e8;
+  }
+  .card-label .sub {
+    font-size: 12px;
+    color: #555;
+    margin-left: auto;
+  }
+
+  /* ─── Frame (16:9 aspect) ─── */
+  .frame {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform .2s;
+  }
+  .frame:hover { transform: scale(1.01); }
+
+  /* ─── Tags ─── */
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px;
+    color: #555;
+    border: 1px solid #2a2a2a;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .desc {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════════
+     DIRECTION 1 — WARM KITCHEN
+     Homey × Premium
+  ═══════════════════════════════════════════ */
+  .wk {
+    background: #f7efe3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wk-inner {
+    width: 82%;
+    height: 84%;
+    display: flex;
+    gap: 5%;
+    align-items: center;
+  }
+  .wk-card {
+    width: 44%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(160,100,40,.18), 0 2px 8px rgba(0,0,0,.08);
+    flex-shrink: 0;
+  }
+  .wk-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(1.1) brightness(1.05);
+  }
+  .wk-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4%;
+    padding: 4% 0;
+  }
+  .wk-eyebrow {
+    font-size: clamp(7px,1.1vw,10px);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #b08050;
+    font-weight: 600;
+  }
+  .wk-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14px,2.2vw,22px);
+    font-weight: 700;
+    color: #2c1e0f;
+    line-height: 1.25;
+  }
+  .wk-rule {
+    width: 32px; height: 2px;
+    background: #c8974a;
+    border-radius: 1px;
+    margin: 2% 0;
+  }
+  .wk-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .wk-menu-item {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(10px,1.5vw,15px);
+    color: #6b4e2a;
+  }
+  .wk-logo {
+    margin-top: auto;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(8px,1.1vw,11px);
+    color: #b08050;
+    letter-spacing: .1em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wk-logo::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 1px;
+    background: #b08050;
+  }
+  .wk-paper {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: .5;
+  }
+
+  /* ═══════════════════════════════════════════
+     DIRECTION 2 — NOIR GRID
+     Urban Modern × Premium
+  ═══════════════════════════════════════════ */
+  .ng {
+    background: #0d0d0d;
+    position: relative;
+    overflow: hidden;
+  }
+  .ng-photo {
+    position: absolute; inset: 0;
+  }
+  .ng-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) brightness(.55);
+  }
+  .ng-grain {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .ng-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,.2) 60%, rgba(0,0,0,.5) 100%);
+  }
+  .ng-accent-line {
+    position: absolute;
+    top: 0; left: 48px;
+    width: 2px; height: 100%;
+    background: #4a8c5c;
+    opacity: .7;
+  }
+  .ng-accent-line2 {
+    position: absolute;
+    bottom: 28%; left: 0; right: 0;
+    height: 1px;
+    background: #4a8c5c;
+    opacity: .3;
+  }
+  .ng-content {
+    position: absolute; inset: 0;
+    padding: 6% 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .ng-no {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(8px,1vw,10px);
+    letter-spacing: .25em;
+    color: #4a8c5c;
+  }
+  .ng-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(20px,3.8vw,42px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.0;
+    letter-spacing: -.01em;
+  }
+  .ng-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .ng-menu { display: flex; flex-direction: column; gap: 3px; }
+  .ng-menu-item {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(7px,1vw,10px);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.55);
+  }
+  .ng-menu-item::before {
+    content: '— ';
+    color: #4a8c5c;
+  }
+  .ng-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(7px,.9vw,9px);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #4a8c5c;
+    text-align: right;
+  }
+
+  /* ═══════════════════════════════════════════
+     DIRECTION 3 — CINEMATIC REEL
+     Premium × Slow
+  ═══════════════════════════════════════════ */
+  .cr {
+    background: #000;
+    position: relative;
+  }
+  .cr-video-area {
+    position: absolute;
+    top: 13%; bottom: 13%; left: 0; right: 0;
+    overflow: hidden;
+  }
+  .cr-video-area img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: contrast(1.05) brightness(.9) saturate(1.1);
+  }
+  .cr-grade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(0,30,40,.15) 0%,
+      transparent 40%,
+      rgba(0,0,0,.5) 100%);
+    pointer-events: none;
+  }
+  .cr-bar-top {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 13%;
+    background: #000;
+    display: flex; align-items: center;
+    padding: 0 4%;
+  }
+  .cr-bar-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 13%;
+    background: #000;
+  }
+  .cr-timecode {
+    font-size: clamp(7px,.85vw,9px);
+    letter-spacing: .2em;
+    color: #333;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .cr-logo-top {
+    margin-left: auto;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(7px,.85vw,9px);
+    letter-spacing: .2em;
+    color: #333;
+  }
+  .cr-lower {
+    position: absolute;
+    bottom: 18%;
+    left: 5%;
+    right: 5%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .cr-lower-third {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cr-lt-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(6px,.8vw,8px);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #c8974a;
+  }
+  .cr-lt-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14px,2vw,20px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .cr-lt-line {
+    width: 100%;
+    height: 1px;
+    background: rgba(200,151,74,.4);
+    margin-top: 4px;
+  }
+  .cr-menu-right {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    text-align: right;
+  }
+  .cr-menu-right span {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(6px,.75vw,8px);
+    color: rgba(255,255,255,.5);
+    letter-spacing: .05em;
+  }
+
+  /* ═══════════════════════════════════════════
+     DIRECTION 4 — STREET CUT
+     Urban Modern × Energetic
+  ═══════════════════════════════════════════ */
+  .sc {
+    background: #000;
+    position: relative;
+    overflow: hidden;
+  }
+  .sc-video {
+    position: absolute; inset: 0;
+  }
+  .sc-video img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: contrast(1.2) brightness(.7) saturate(1.3);
+  }
+  .sc-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(0,0,0,.75) 0%,
+      rgba(0,0,0,.2) 50%,
+      rgba(0,0,0,.6) 100%
+    );
+  }
+  .sc-stripe {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 6px;
+    background: #e8c03a;
+  }
+  .sc-stripe2 {
+    position: absolute;
+    top: 0; right: 30%; bottom: 0;
+    width: 1px;
+    background: rgba(232,192,58,.15);
+  }
+  .sc-content {
+    position: absolute; inset: 0;
+    padding: 7% 7% 7% 9%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .sc-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sc-tag {
+    background: #e8c03a;
+    color: #000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(6px,.85vw,9px);
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+  }
+  .sc-no {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(6px,.85vw,9px);
+    letter-spacing: .2em;
+    color: rgba(255,255,255,.4);
+  }
+  .sc-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(16px,3.2vw,36px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.0;
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+  }
+  .sc-name em {
+    color: #e8c03a;
+    font-style: normal;
+  }
+  .sc-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .sc-menu-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .sc-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(7px,.9vw,9px);
+    color: rgba(255,255,255,.7);
+    letter-spacing: .05em;
+  }
+  .sc-pill::before {
+    content: '';
+    display: block;
+    width: 4px; height: 4px;
+    background: #e8c03a;
+    flex-shrink: 0;
+  }
+  .sc-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(7px,.9vw,9px);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.25);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  /* ─── Divider ─── */
+  .section-title {
+    max-width: 1200px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-title span {
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #444;
+    white-space: nowrap;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #222;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>FoodStock — Video Direction Study</h1>
+  <h2>4 รูปแบบที่เสนอ</h2>
+  <p>loop TV · พัฒนาการ 32 · 1920×1080</p>
+</div>
+
+<!-- Photo source -->
+<div class="section-title">
+  <span>Photo source — รูปถ่ายเป็น input</span>
+</div>
+
+<div class="grid" style="margin-bottom:48px">
+
+  <!-- DIRECTION 1: WARM KITCHEN -->
+  <div class="card">
+    <div class="card-label">
+      <span class="badge photo">Photo</span>
+      <h3>Warm Kitchen</h3>
+      <span class="sub">Homey × Premium</span>
+    </div>
+    <div class="frame wk">
+      <div class="wk-paper"></div>
+      <div class="wk-inner">
+        <div class="wk-card">
+          <img src="data/photos/07-เนื้อในตำนาน.jpg" alt="food">
+        </div>
+        <div class="wk-text">
+          <div class="wk-eyebrow">ร้านที่ 07</div>
+          <div class="wk-name">เนื้อในตำนาน</div>
+          <div class="wk-rule"></div>
+          <div class="wk-menu">
+            <div class="wk-menu-item">ก๋วยเตี๋ยวเนื้อสูตรโบราณ</div>
+            <div class="wk-menu-item">เกาเหลาเนื้อสุดเข้มข้น</div>
+            <div class="wk-menu-item">น้ำสมุนไพรในตำนาน</div>
+          </div>
+          <div class="wk-logo">FoodStock</div>
+        </div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag">cross-fade transition</span>
+      <span class="tag">serif + handwriting</span>
+      <span class="tag">cream background</span>
+      <span class="tag">5–6s/scene</span>
+    </div>
+    <p class="desc">เหมือนหน้าเมนูร้านกาแฟ premium — อบอุ่น อ่านง่าย เหมาะกับ family restaurant vibe</p>
+  </div>
+
+  <!-- DIRECTION 2: NOIR GRID -->
+  <div class="card">
+    <div class="card-label">
+      <span class="badge photo">Photo</span>
+      <h3>Noir Grid</h3>
+      <span class="sub">Urban Modern × Premium</span>
+    </div>
+    <div class="frame ng">
+      <div class="ng-photo">
+        <img src="data/photos/12-โคตรกะเพราจงเจริญ.jpg" alt="food">
+      </div>
+      <div class="ng-grain"></div>
+      <div class="ng-overlay"></div>
+      <div class="ng-accent-line"></div>
+      <div class="ng-accent-line2"></div>
+      <div class="ng-content">
+        <div>
+          <div class="ng-no">// 12</div>
+          <div class="ng-name">โคตร<br>กะเพรา</div>
+        </div>
+        <div class="ng-bottom">
+          <div class="ng-menu">
+            <div class="ng-menu-item">เด็ดทุกเมนูกะเพรา</div>
+            <div class="ng-menu-item">เลิศทุกเมนูตามสั่ง</div>
+            <div class="ng-menu-item">อร่อยติดใจสายอีทแซ่บ</div>
+          </div>
+          <div class="ng-brand">FoodStock<br>พัฒนาการ 32</div>
+        </div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag">grayscale + green accent</span>
+      <span class="tag">bold typography</span>
+      <span class="tag">film grain</span>
+      <span class="tag">3–4s/scene</span>
+    </div>
+    <p class="desc">โปสเตอร์ฟิล์มยุค 90s เจอ street food — ตัวอักษรใหญ่มาก รู้สึกได้ทันทีแม้มองจากไกล</p>
+  </div>
+
+</div>
+
+<!-- Video source -->
+<div class="section-title">
+  <span>Video source — คลิปวิดีโอเป็น input</span>
+</div>
+
+<div class="grid">
+
+  <!-- DIRECTION 3: CINEMATIC REEL -->
+  <div class="card">
+    <div class="card-label">
+      <span class="badge video">Video</span>
+      <h3>Cinematic Reel</h3>
+      <span class="sub">Premium × Slow</span>
+    </div>
+    <div class="frame cr">
+      <div class="cr-bar-top">
+        <span class="cr-timecode">00:00:07:14</span>
+        <span class="cr-logo-top">FOODSTOCK</span>
+      </div>
+      <div class="cr-video-area">
+        <img src="data/photos/03-Tsukemen-gogo.jpg" alt="food">
+        <div class="cr-grade"></div>
+      </div>
+      <div class="cr-bar-bottom"></div>
+      <div class="cr-lower">
+        <div class="cr-lower-third">
+          <div class="cr-lt-label">ร้านที่ 03 · ราเมน</div>
+          <div class="cr-lt-name">Tsukemen gogo</div>
+          <div class="cr-lt-line"></div>
+        </div>
+        <div class="cr-menu-right">
+          <span>Gyuhoruomon Tsukemen</span>
+          <span>Umakara Tsukemen Special</span>
+          <span>Tonkotsu Ramen</span>
+        </div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag">letterbox 2.39:1</span>
+      <span class="tag">lower-third</span>
+      <span class="tag">documentary style</span>
+      <span class="tag">6–8s/scene</span>
+    </div>
+    <p class="desc">Netflix food series energy — แถบดำบนล่างสร้าง cinematic feel ทันที lower-third สะอาด อ่านง่าย</p>
+  </div>
+
+  <!-- DIRECTION 4: STREET CUT -->
+  <div class="card">
+    <div class="card-label">
+      <span class="badge video">Video</span>
+      <h3>Street Cut</h3>
+      <span class="sub">Urban Modern × Energetic</span>
+    </div>
+    <div class="frame sc">
+      <div class="sc-video">
+        <img src="data/photos/01-แชมป์-เย็นตาโฟเครื่องทอด.jpg" alt="food">
+      </div>
+      <div class="sc-overlay"></div>
+      <div class="sc-stripe"></div>
+      <div class="sc-stripe2"></div>
+      <div class="sc-content">
+        <div class="sc-top">
+          <span class="sc-tag">FoodStock</span>
+          <span class="sc-no">01 / 16</span>
+        </div>
+        <div>
+          <div class="sc-name">แชมป์<br><em>เย็นตาโฟ</em></div>
+        </div>
+        <div class="sc-bottom">
+          <div class="sc-menu-pills">
+            <div class="sc-pill">เย็นตาโฟเครื่องทอด</div>
+            <div class="sc-pill">เย็นตาโฟทะเลเครื่องแน่นเอี้ยด</div>
+            <div class="sc-pill">เผือกทอด</div>
+          </div>
+          <div class="sc-brand">พัฒนาการ 32</div>
+        </div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag">fast cut 2–3s</span>
+      <span class="tag">yellow accent</span>
+      <span class="tag">full bleed overlay</span>
+      <span class="tag">bold uppercase</span>
+    </div>
+    <p class="desc">delivery app promo × street food — ดูเร้าใจ เหมาะถ้าอยากให้คนหยุดมอง ดึงดูดคนเดินผ่านได้ดี</p>
+  </div>
+
+</div>
+
+</body>
+</html>

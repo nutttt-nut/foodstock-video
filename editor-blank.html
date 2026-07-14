@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Video Scene Editor — Blank Template</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #111214;
+  --surface: #1a1c1f;
+  --border:  #252729;
+  --hover:   #1f2124;
+  --text:    #e2e4e8;
+  --muted:   #555;
+  --accent:  #4a8c5c;
+  --amber:   #c8974a;
+  --danger:  #8c4a4a;
+  --preview-bg: #2A333B;
+  --cream:   #F5EFE6;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ─── Topbar ─── */
+.topbar {
+  height: 44px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.topbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.topbar-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+.topbar-right { margin-left: auto; display: flex; gap: 8px; }
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.btn:hover { opacity: .85; }
+.btn:active { opacity: .7; }
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: #444; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-amber   { background: var(--amber); color: #fff; }
+.btn-danger  { background: var(--danger); color: #fff; font-size: 11px; padding: 4px 8px; }
+
+/* ─── Layout ─── */
+.workspace {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.sidebar-header {
+  padding: 12px 12px 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.scene-count {
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--border);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+.sidebar-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px;
+}
+.sidebar-list::-webkit-scrollbar { width: 4px; }
+.sidebar-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.r-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background .1s, color .1s;
+  user-select: none;
+  position: relative;
+}
+.r-item:hover { background: var(--hover); color: var(--text); }
+.r-item.active { background: #1e2d23; color: var(--accent); }
+.r-item.brand-item { color: var(--amber); }
+.r-item.brand-item:hover { background: #2a220f; color: var(--amber); }
+.r-item.brand-item.active { background: #2a220f; color: var(--amber); }
+
+.r-num {
+  font-size: 10px;
+  width: 20px;
+  text-align: center;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.r-name {
+  font-size: 12px;
+  font-weight: 500;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.r-del {
+  opacity: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--danger);
+  flex-shrink: 0;
+  padding: 0 2px;
+  transition: opacity .15s;
+}
+.r-item:hover .r-del { opacity: 1; }
+
+.add-scene-btn {
+  margin: 6px;
+  padding: 8px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  width: calc(100% - 12px);
+  transition: border-color .15s, color .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.add-scene-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* drag handle */
+.drag-handle {
+  cursor: grab;
+  color: var(--border);
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.r-item:hover .drag-handle { color: var(--muted); }
+
+/* ─── Main panel ─── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ─── Preview ─── */
+.preview-wrap {
+  padding: 16px 16px 0;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.preview-label {
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.preview-frame {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--preview-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+}
+.preview-inner {
+  width: 100%; height: 100%;
+  display: flex;
+  position: relative;
+}
+.preview-inner.cream-bg { background: var(--cream); }
+
+/* rest preview */
+.pv-photo {
+  width: 55%; height: 100%;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.pv-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.pv-photo-placeholder {
+  width: 100%; height: 100%;
+  background: #1e2428;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: #333;
+}
+.pv-photo-placeholder span { font-size: 28px; }
+.pv-photo-placeholder p { font-size: 10px; letter-spacing: .1em; }
+.pv-text {
+  flex: 1;
+  padding: 6% 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6%;
+}
+.pv-name {
+  font-size: clamp(10px, 1.8vw, 18px);
+  font-weight: 600;
+  color: #e2e4e8;
+  line-height: 1.3;
+}
+.pv-rule { width: 20px; height: 2px; background: var(--accent); }
+.pv-menu {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.pv-menu-item {
+  font-size: clamp(7px, 1vw, 10px);
+  color: rgba(255,255,255,.5);
+}
+
+/* brand preview (intro/outro) */
+.pv-brand {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8%;
+}
+.pv-brand-logo {
+  height: clamp(24px, 4vw, 40px);
+  object-fit: contain;
+}
+.pv-brand-logo-placeholder {
+  height: clamp(24px, 4vw, 40px);
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.15);
+  border-radius: 6px;
+  padding: 0 16px;
+  font-size: clamp(10px, 1.4vw, 14px);
+  font-weight: 700;
+  color: #2c4a32;
+}
+.pv-brand-tagline {
+  font-size: clamp(9px, 1.3vw, 13px);
+  color: #4a3a1e;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.4;
+}
+.pv-brand-rule { width: 24px; height: 2px; background: var(--amber); }
+.pv-brand-sub {
+  font-size: clamp(7px, 1vw, 10px);
+  color: #7a6040;
+  text-align: center;
+}
+.pv-brand-sub-big {
+  font-size: clamp(9px, 1.3vw, 13px);
+  color: #4a3a1e;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ─── Edit Panel ─── */
+.panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+.panel::-webkit-scrollbar { width: 4px; }
+.panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.panel-title {
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: .1em;
+}
+.badge-amber { background: rgba(200,151,74,.15); color: var(--amber); border: 1px solid rgba(200,151,74,.25); }
+.badge-green { background: rgba(74,140,92,.15); color: var(--accent); border: 1px solid rgba(74,140,92,.25); }
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.field label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+.field input, .field textarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color .15s;
+  width: 100%;
+}
+.field input:focus, .field textarea:focus {
+  border-color: var(--accent);
+}
+.field textarea { resize: vertical; min-height: 60px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.image-upload {
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color .15s;
+  position: relative;
+  overflow: hidden;
+}
+.image-upload:hover { border-color: var(--accent); }
+.image-upload input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+}
+.image-upload .img-icon { font-size: 20px; }
+.image-upload .img-label { font-size: 11px; color: var(--muted); }
+.image-upload .img-preview {
+  width: 100%;
+  max-height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: none;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+/* empty state */
+.empty-state {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--muted);
+}
+.empty-state .es-icon { font-size: 32px; }
+.empty-state p { font-size: 13px; }
+.empty-state span { font-size: 11px; color: #444; }
+
+/* ─── Status bar ─── */
+.statusbar {
+  height: 28px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.status-item {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-title">Scene Editor</div>
+  <div class="topbar-sub" id="topbar-project">— Blank Template</div>
+  <div class="topbar-right">
+    <button class="btn btn-ghost" onclick="clearAll()">Clear All</button>
+    <button class="btn btn-amber" onclick="exportJSON()">Export JSON</button>
+  </div>
+</div>
+
+<!-- Workspace -->
+<div class="workspace">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      Scenes
+      <span class="scene-count" id="scene-count">2</span>
+    </div>
+    <div class="sidebar-list" id="sidebar-list">
+      <!-- rendered by JS -->
+    </div>
+    <button class="add-scene-btn" onclick="addScene()">
+      <span>+</span> เพิ่ม Scene
+    </button>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Preview -->
+    <div class="preview-wrap">
+      <div class="preview-label">Preview</div>
+      <div class="preview-frame">
+        <div class="preview-inner" id="preview-inner">
+          <div class="empty-state">
+            <div class="es-icon">🎬</div>
+            <p>เลือก scene จาก sidebar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Panel -->
+    <div class="panel" id="edit-panel">
+      <div class="empty-state" style="height:200px">
+        <div class="es-icon">👈</div>
+        <p>เลือก scene เพื่อแก้ไข</p>
+        <span>INTRO · ร้าน · OUTRO</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Status bar -->
+<div class="statusbar">
+  <div class="status-item">
+    <div class="status-dot"></div>
+    <span id="status-text">พร้อมใช้งาน</span>
+  </div>
+  <div class="status-item">⏱ <span id="status-duration">—</span></div>
+  <div class="status-item">📁 <span id="status-scenes">0 scenes</span></div>
+</div>
+
+<script>
+// ─── State ───────────────────────────────────────────────
+let brand = {
+  intro_tagline_l1: 'มากกว่าศูนย์อาหาร',
+  intro_tagline_l2: 'คือพื้นที่แห่งความสุข',
+  intro_sub: '16 ร้านเด็ด · พัฒนาการ 32',
+  outro_hours: 'เปิดบริการทุกวัน · 8:00–21:00 น.',
+  outro_addr: '471 พัฒนาการ 32 · สวนหลวง กทม.',
+  outro_web: 'foodstock.info'
+};
+
+let scenes = []; // content scenes between intro and outro
+let selectedIdx = null; // null=none, 'intro', 'outro', or number
+
+// allScenes virtual array: intro, ...scenes, outro
+function allScenes() {
+  return ['intro', ...scenes.map((_,i)=>i), 'outro'];
+}
+
+// ─── Sidebar ─────────────────────────────────────────────
+function buildSidebar() {
+  const list = document.getElementById('sidebar-list');
+  const all = allScenes();
+  const count = scenes.length + 2;
+  document.getElementById('scene-count').textContent = count;
+
+  list.innerHTML = all.map((item, pos) => {
+    const isIntro = item === 'intro';
+    const isOutro = item === 'outro';
+    const isBrand = isIntro || isOutro;
+    const active = selectedIdx === item ? 'active' : '';
+    const label = isIntro ? 'INTRO' : isOutro ? 'OUTRO' : (scenes[item]?.name || `Scene ${item+1}`);
+    const icon  = isIntro ? '▶' : isOutro ? '■' : (item+1).toString().padStart(2,'0');
+
+    return `<div class="r-item ${isBrand?'brand-item':''} ${active}"
+                 onclick="select('${isIntro?'intro':isOutro?'outro':item}')">
+      ${!isBrand ? `<span class="drag-handle" title="drag">⋮⋮</span>` : ''}
+      <span class="r-num">${icon}</span>
+      <span class="r-name">${label}</span>
+      ${!isBrand ? `<span class="r-del" onclick="event.stopPropagation();deleteScene(${item})">✕</span>` : ''}
+    </div>`;
+  }).join('');
+
+  updateStatus();
+}
+
+// ─── Select ──────────────────────────────────────────────
+function select(key) {
+  selectedIdx = key === 'intro' ? 'intro' : key === 'outro' ? 'outro' : Number(key);
+  buildSidebar();
+
+  if (selectedIdx === 'intro') {
+    showIntroPanel();
+    renderIntroPreview();
+  } else if (selectedIdx === 'outro') {
+    showOutroPanel();
+    renderOutroPreview();
+  } else {
+    showRestPanel(selectedIdx);
+    renderRestPreview(selectedIdx);
+  }
+}
+
+// ─── Panels ──────────────────────────────────────────────
+function showIntroPanel() {
+  document.getElementById('edit-panel').innerHTML = `
+    <div class="panel-title">
+      <span class="panel-badge badge-amber">INTRO</span>
+      Opening Scene
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Tagline บรรทัดที่ 1</label>
+        <input id="f-tl1" value="${esc(brand.intro_tagline_l1)}"
+               oninput="brand.intro_tagline_l1=this.value;renderIntroPreview()">
+      </div>
+      <div class="field">
+        <label>Tagline บรรทัดที่ 2</label>
+        <input id="f-tl2" value="${esc(brand.intro_tagline_l2)}"
+               oninput="brand.intro_tagline_l2=this.value;renderIntroPreview()">
+      </div>
+      <div class="field">
+        <label>Sub-text (เช่น จำนวนร้าน · ที่ตั้ง)</label>
+        <input id="f-sub" value="${esc(brand.intro_sub)}"
+               oninput="brand.intro_sub=this.value;renderIntroPreview()">
+      </div>
+    </div>`;
+}
+
+function showOutroPanel() {
+  document.getElementById('edit-panel').innerHTML = `
+    <div class="panel-title">
+      <span class="panel-badge badge-amber">OUTRO</span>
+      Closing Scene
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>เวลาเปิด-ปิด</label>
+        <input id="f-hours" value="${esc(brand.outro_hours)}"
+               oninput="brand.outro_hours=this.value;renderOutroPreview()">
+      </div>
+      <div class="field">
+        <label>ที่อยู่</label>
+        <input id="f-addr" value="${esc(brand.outro_addr)}"
+               oninput="brand.outro_addr=this.value;renderOutroPreview()">
+      </div>
+      <div class="field">
+        <label>Website / Social</label>
+        <input id="f-web" value="${esc(brand.outro_web)}"
+               oninput="brand.outro_web=this.value;renderOutroPreview()">
+      </div>
+    </div>`;
+}
+
+function showRestPanel(i) {
+  const s = scenes[i];
+  if (!s) return;
+  document.getElementById('edit-panel').innerHTML = `
+    <div class="panel-title">
+      <span class="panel-badge badge-green">SCENE ${i+1}</span>
+      Content Scene
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>ชื่อร้าน / หัวข้อ</label>
+        <input value="${esc(s.name)}"
+               oninput="scenes[${i}].name=this.value;buildSidebar();renderRestPreview(${i})">
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>เมนู / ข้อความ 1</label>
+        <input value="${esc(s.menu1)}"
+               oninput="scenes[${i}].menu1=this.value;renderRestPreview(${i})">
+      </div>
+      <div class="field">
+        <label>เมนู / ข้อความ 2</label>
+        <input value="${esc(s.menu2)}"
+               oninput="scenes[${i}].menu2=this.value;renderRestPreview(${i})">
+      </div>
+      <div class="field">
+        <label>เมนู / ข้อความ 3</label>
+        <input value="${esc(s.menu3)}"
+               oninput="scenes[${i}].menu3=this.value;renderRestPreview(${i})">
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>ชื่อไฟล์รูป (วางใน data/photos/)</label>
+        <input value="${esc(s.photo)}" placeholder="เช่น 01-ชื่อร้าน.jpg"
+               oninput="scenes[${i}].photo=this.value;renderRestPreview(${i})">
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end">
+      <button class="btn btn-danger" onclick="deleteScene(${i})">ลบ Scene นี้</button>
+    </div>`;
+}
+
+// ─── Previews ────────────────────────────────────────────
+function renderIntroPreview() {
+  const pi = document.getElementById('preview-inner');
+  pi.className = 'preview-inner cream-bg';
+  pi.innerHTML = `
+    <div class="pv-brand">
+      <div class="pv-brand-logo-placeholder">LOGO</div>
+      <div class="pv-brand-tagline">${htmlEsc(brand.intro_tagline_l1) || '—'}<br>${htmlEsc(brand.intro_tagline_l2) || ''}</div>
+      <div class="pv-brand-rule"></div>
+      <div class="pv-brand-sub">${htmlEsc(brand.intro_sub) || '—'}</div>
+    </div>`;
+}
+
+function renderOutroPreview() {
+  const pi = document.getElementById('preview-inner');
+  pi.className = 'preview-inner cream-bg';
+  pi.innerHTML = `
+    <div class="pv-brand">
+      <div class="pv-brand-logo-placeholder">LOGO</div>
+      <div class="pv-brand-sub-big">${htmlEsc(brand.outro_hours) || '—'}</div>
+      <div class="pv-brand-rule"></div>
+      <div class="pv-brand-sub">${htmlEsc(brand.outro_addr) || '—'}</div>
+      <div class="pv-brand-sub">${htmlEsc(brand.outro_web) || ''}</div>
+    </div>`;
+}
+
+function renderRestPreview(i) {
+  const s = scenes[i];
+  if (!s) return;
+  const pi = document.getElementById('preview-inner');
+  pi.className = 'preview-inner';
+  const photoSrc = s.photo ? `data/photos/${s.photo}` : null;
+  const photoHtml = photoSrc
+    ? `<img src="${photoSrc}" onerror="this.parentNode.innerHTML='<div class=pv-photo-placeholder><span>🖼</span><p>ไม่พบรูป</p></div>'">`
+    : `<div class="pv-photo-placeholder"><span>🖼</span><p>ยังไม่มีรูป</p></div>`;
+
+  pi.innerHTML = `
+    <div class="pv-photo">${photoHtml}</div>
+    <div class="pv-text">
+      <div class="pv-name">${htmlEsc(s.name) || 'ชื่อร้าน'}</div>
+      <div class="pv-rule"></div>
+      <div class="pv-menu">
+        <div class="pv-menu-item">${htmlEsc(s.menu1) || '—'}</div>
+        <div class="pv-menu-item">${htmlEsc(s.menu2) || ''}</div>
+        <div class="pv-menu-item">${htmlEsc(s.menu3) || ''}</div>
+      </div>
+    </div>`;
+}
+
+// ─── Scene management ────────────────────────────────────
+function addScene() {
+  const i = scenes.length;
+  scenes.push({ name: '', menu1: '', menu2: '', menu3: '', photo: '' });
+  buildSidebar();
+  select(i);
+  setStatus(`เพิ่ม Scene ${i+1} แล้ว`);
+}
+
+function deleteScene(i) {
+  if (!confirm(`ลบ Scene ${i+1} (${scenes[i].name || 'ไม่มีชื่อ'})?`)) return;
+  scenes.splice(i, 1);
+  selectedIdx = null;
+  buildSidebar();
+  document.getElementById('edit-panel').innerHTML = `
+    <div class="empty-state" style="height:200px">
+      <div class="es-icon">👈</div><p>เลือก scene เพื่อแก้ไข</p>
+    </div>`;
+  document.getElementById('preview-inner').className = 'preview-inner';
+  document.getElementById('preview-inner').innerHTML = `
+    <div class="empty-state"><div class="es-icon">🎬</div><p>เลือก scene</p></div>`;
+  setStatus('ลบ Scene แล้ว');
+}
+
+function clearAll() {
+  if (!confirm('ล้างข้อมูลทั้งหมด? (INTRO/OUTRO จะถูก reset ด้วย)')) return;
+  brand = { intro_tagline_l1:'', intro_tagline_l2:'', intro_sub:'', outro_hours:'', outro_addr:'', outro_web:'' };
+  scenes = [];
+  selectedIdx = null;
+  buildSidebar();
+  document.getElementById('edit-panel').innerHTML = '<div class="empty-state" style="height:200px"><div class="es-icon">🗑</div><p>ล้างข้อมูลแล้ว</p></div>';
+  document.getElementById('preview-inner').className = 'preview-inner';
+  document.getElementById('preview-inner').innerHTML = '<div class="empty-state"><div class="es-icon">🎬</div><p>เลือก scene</p></div>';
+  setStatus('ล้างข้อมูลแล้ว');
+}
+
+// ─── Export ──────────────────────────────────────────────
+function exportJSON() {
+  // restaurants.json
+  const restData = scenes.map((s, i) => {
+    const pad = String(i+1).padStart(2,'0');
+    const slug = s.name.replace(/\s+/g,'-').replace(/[^\w฀-๿-]/g,'') || `scene-${pad}`;
+    return {
+      id: `${pad}-${slug}`,
+      name: s.name,
+      menu1: s.menu1,
+      menu2: s.menu2,
+      menu3: s.menu3
+    };
+  });
+  downloadJSON('restaurants.json', restData);
+
+  setTimeout(() => {
+    downloadJSON('brand-config.json', brand);
+    setStatus(`Export สำเร็จ — restaurants.json + brand-config.json (${scenes.length} scenes)`);
+  }, 200);
+}
+
+function downloadJSON(filename, data) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ─── Status ──────────────────────────────────────────────
+function updateStatus() {
+  const n = scenes.length;
+  const dur = n * 5 + 3.2 + 3;
+  document.getElementById('status-scenes').textContent = `${n} content scene${n!==1?'s':''}`;
+  document.getElementById('status-duration').textContent = n > 0
+    ? `~${dur.toFixed(0)}s (${n} × 5s + intro + outro)`
+    : '—';
+}
+
+function setStatus(msg) {
+  document.getElementById('status-text').textContent = msg;
+  setTimeout(() => document.getElementById('status-text').textContent = 'พร้อมใช้งาน', 3000);
+}
+
+// ─── Utils ───────────────────────────────────────────────
+function esc(str) {
+  return (str||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function htmlEsc(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─── Init ────────────────────────────────────────────────
+buildSidebar();
+select('intro');
+</script>
+</body>
+</html>

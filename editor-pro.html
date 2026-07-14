@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<title>FoodStock Scene Editor Pro</title>
+<style>
+  @font-face { font-family:"Kanit"; font-weight:400; src:url("fonts/Kanit-Regular.ttf") format("truetype"); }
+  @font-face { font-family:"Kanit"; font-weight:600; src:url("fonts/Kanit-SemiBold.ttf") format("truetype"); }
+  @font-face { font-family:"Kanit"; font-weight:700; src:url("fonts/Kanit-Bold.ttf") format("truetype"); }
+  @font-face { font-family:"Noto Sans Thai"; font-weight:100 900; src:url("fonts/NotoSansThai.ttf") format("truetype"); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#2A333B; color:#F5EFE6; font-family:"Noto Sans Thai",sans-serif; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+  header { background:#495862; border-bottom:2px solid #E0A43B; padding:13px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+  .title { font-family:"Kanit",sans-serif; font-weight:700; font-size:18px; color:#F5EFE6; }
+  .title span { color:#E0A43B; }
+  .title-sub { font-size:11px; color:#8a9ba5; font-family:"Kanit",sans-serif; font-weight:400; letter-spacing:1px; margin-left:10px; }
+  .header-actions { display:flex; align-items:center; gap:8px; }
+  .action-btn { background:#E0A43B; color:#2A333B; border:none; font-family:"Kanit",sans-serif; font-weight:700; font-size:13px; padding:9px 14px; border-radius:5px; cursor:pointer; letter-spacing:.5px; }
+  .action-btn:hover { background:#c8922a; }
+  .action-btn.secondary { background:#2A333B; color:#F5EFE6; border:1px solid #5C6B75; }
+  .action-btn.secondary:hover { background:#35414a; }
+  /* ─── Theme Bar ─── */
+  #theme-bar { background:#1e262d; border-bottom:1px solid #2e3a42; padding:7px 24px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .theme-bar-label { font-size:10px; letter-spacing:2px; color:#4a5a65; font-family:"Kanit",sans-serif; text-transform:uppercase; margin-right:4px; }
+  .theme-card { display:flex; align-items:center; gap:7px; padding:5px 11px; border-radius:5px; cursor:pointer; border:1px solid transparent; transition:border-color .12s, background .12s; }
+  .theme-card:hover { background:#252f36; }
+  .theme-card.active { border-color:#E0A43B; background:#252f36; }
+  .tc-preview { display:flex; border-radius:3px; overflow:hidden; width:34px; height:18px; flex-shrink:0; }
+  .tc-bg { flex:2; }
+  .tc-panel { flex:1.5; }
+  .tc-accent-strip { flex:0 0 4px; }
+  .tc-label { font-size:11px; color:#8a9ba5; font-family:"Kanit",sans-serif; white-space:nowrap; }
+  /* ─── Layout ─── */
+  #layout { display:flex; flex:1; overflow:hidden; }
+  #sidebar { width:240px; background:#1e262d; border-right:1px solid #2e3a42; display:flex; flex-direction:column; flex-shrink:0; }
+  #scene-list { flex:1; overflow-y:auto; }
+  .r-item { padding:10px 14px; cursor:pointer; border-bottom:1px solid #252f36; display:flex; align-items:center; gap:10px; transition:background .12s; user-select:none; }
+  .r-item:hover { background:#252f36; }
+  .r-item.active { background:#495862; border-left:3px solid #E0A43B; padding-left:11px; }
+  .r-item[draggable="true"] { cursor:grab; }
+  .r-item.dragging { opacity:.45; }
+  .r-num { font-family:"Kanit",sans-serif; font-weight:700; font-size:12px; color:#E0A43B; min-width:24px; }
+  .r-name { font-size:12px; color:#F5EFE6; line-height:1.3; flex:1; }
+  .r-badge { font-size:9px; letter-spacing:.5px; color:#4a5a65; font-family:"Kanit",sans-serif; padding:1px 5px; border:1px solid #2e3a42; border-radius:3px; flex-shrink:0; }
+  .r-item.brand-item { background:#171f26; }
+  .r-item.brand-item .r-num { background:#E0A43B; color:#2A333B; border-radius:3px; padding:1px 5px; font-size:9px; letter-spacing:1px; min-width:auto; }
+  #add-btn { flex-shrink:0; padding:11px 14px; background:#1a2228; border-top:1px solid #2e3a42; cursor:pointer; display:flex; align-items:center; gap:8px; color:#E0A43B; font-family:"Kanit",sans-serif; font-size:13px; font-weight:600; transition:background .12s; }
+  #add-btn:hover { background:#252f36; }
+  #status-bar { flex-shrink:0; padding:7px 14px; background:#131a1f; border-top:1px solid #1e262d; font-size:10px; color:#4a5a65; font-family:"Kanit",sans-serif; letter-spacing:.5px; }
+  #content { flex:1; display:flex; overflow:hidden; }
+  #edit-panel { width:300px; padding:22px; background:#232c33; border-right:1px solid #2e3a42; overflow-y:auto; flex-shrink:0; display:flex; flex-direction:column; gap:18px; }
+  .scene-badge { display:inline-block; font-size:10px; letter-spacing:2px; color:#E0A43B; background:#1e262d; border:1px solid #E0A43B; border-radius:3px; padding:3px 8px; font-family:"Kanit",sans-serif; }
+  .field-label { font-size:10px; letter-spacing:3px; color:#C7CDD2; text-transform:uppercase; margin-bottom:6px; }
+  .field-input { width:100%; background:#2A333B; border:1px solid #3a4750; color:#F5EFE6; font-family:"Noto Sans Thai",sans-serif; font-size:13px; padding:9px 11px; border-radius:4px; outline:none; transition:border-color .12s; }
+  .field-input:focus { border-color:#E0A43B; }
+  .file-input { width:100%; color:#8a9ba5; font-size:11px; }
+  .mini-btn { width:100%; background:#1e262d; border:1px solid #3a4750; color:#F5EFE6; border-radius:4px; padding:8px; font-family:"Kanit",sans-serif; font-size:12px; cursor:pointer; }
+  .mini-btn:hover { border-color:#E0A43B; }
+  .menu-inputs { display:flex; flex-direction:column; gap:7px; }
+  .hint { font-size:11px; color:#4a5a65; line-height:1.7; margin-top:4px; }
+  .hint code { background:#1e262d; padding:2px 5px; border-radius:3px; color:#C7CDD2; font-size:10px; }
+  .overlay-list { display:flex; flex-direction:column; gap:10px; }
+  .overlay-row { border:1px solid #2e3a42; border-radius:5px; padding:10px; background:#1e262d; display:flex; flex-direction:column; gap:8px; }
+  .overlay-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+  .overlay-grid .field-input { padding:7px; font-size:12px; }
+  .overlay-remove { background:transparent; border:1px solid #3a2020; color:#c0504a; border-radius:4px; padding:7px; font-family:"Kanit",sans-serif; font-size:11px; cursor:pointer; }
+  .delete-btn { width:100%; padding:9px; background:transparent; border:1px solid #3a2020; color:#c0504a; border-radius:4px; font-family:"Kanit",sans-serif; font-size:12px; font-weight:600; cursor:pointer; letter-spacing:1px; transition:all .12s; }
+  .delete-btn:hover { background:#3a2020; color:#e87070; }
+  /* ─── Layout Picker ─── */
+  .layout-picker { display:flex; gap:8px; margin-top:4px; }
+  .lp-opt { display:flex; flex-direction:column; align-items:center; gap:5px; padding:8px 10px; border-radius:5px; border:1px solid #2e3a42; cursor:pointer; transition:border-color .12s, background .12s; flex:1; }
+  .lp-opt:hover { background:#2A333B; }
+  .lp-opt.active { border-color:#E0A43B; background:#2A333B; }
+  .lp-opt svg { display:block; }
+  .lp-opt span { font-size:9px; letter-spacing:1px; color:#8a9ba5; font-family:"Kanit",sans-serif; text-transform:uppercase; white-space:nowrap; }
+  .lp-opt.active span { color:#E0A43B; }
+  #preview-pane { flex:1; display:flex; align-items:center; justify-content:center; background:#161d22; padding:24px; }
+  .preview-wrap { overflow:hidden; border-radius:5px; box-shadow:0 8px 32px rgba(0,0,0,.7); flex-shrink:0; }
+  /* ─── Preview CSS vars (default = T0 Dark Slate) ─── */
+  .preview-inner {
+    transform-origin:top left; position:relative;
+    background:var(--c-bg);
+    --c-bg:#2A333B; --c-panel:#495862; --c-accent:#E0A43B;
+    --c-text:#F5EFE6; --c-subtext:#C7CDD2; --c-mark:#5C6B75;
+    --c-brand-bg:#F5EFE6; --c-brand-text:#2A333B; --c-brand-sub:#495862;
+  }
+  .preview-inner.brand-scene { background:var(--c-brand-bg); }
+  .preview-inner.theme-T1 {
+    --c-bg:#3D2B1F; --c-panel:#5C3A28; --c-accent:#E8834A;
+    --c-text:#F5EFE6; --c-subtext:#D4C4B8; --c-mark:#7A6050;
+    --c-brand-bg:#FFF8F0; --c-brand-text:#3D2B1F; --c-brand-sub:#5C3A28;
+  }
+  .preview-inner.theme-T2 {
+    --c-bg:#0A0A0A; --c-panel:#1C1C1C; --c-accent:#E0E0E0;
+    --c-text:#E0E0E0; --c-subtext:#909090; --c-mark:#404040;
+    --c-brand-bg:#F0F0F0; --c-brand-text:#0A0A0A; --c-brand-sub:#404040;
+  }
+  .preview-inner.theme-T3 {
+    --c-bg:#1A2820; --c-panel:#253D2F; --c-accent:#5CB87A;
+    --c-text:#E8F0EB; --c-subtext:#A8C0B0; --c-mark:#3A5545;
+    --c-brand-bg:#F0F7F2; --c-brand-text:#1A2820; --c-brand-sub:#253D2F;
+  }
+  /* ─── L0: Split Panel (current) ─── */
+  .ms-split { position:absolute; inset:0; display:flex; }
+  .ms-photo-wrap { position:relative; width:52%; height:100%; overflow:hidden; }
+  .ms-photo { position:absolute; inset:0; background-size:cover; background-position:center; }
+  .ms-scrim { position:absolute; top:0; bottom:0; width:110px; }
+  .ms-scrim.left  { right:0; background:linear-gradient(90deg,  transparent, var(--c-bg)); }
+  .ms-scrim.right { left:0;  background:linear-gradient(270deg, transparent, var(--c-bg)); }
+  .ms-panel { position:relative; width:48%; height:100%; background:var(--c-panel); padding:59px 48px; display:flex; flex-direction:column; justify-content:center; }
+  .ms-panel.bl { border-left:2px solid var(--c-accent); }
+  .ms-panel.br { border-right:2px solid var(--c-accent); }
+  .ms-ptop { display:flex; align-items:baseline; gap:11px; margin-bottom:13px; }
+  .ms-idx { font-family:"Kanit",sans-serif; font-weight:700; font-size:33px; color:var(--c-accent); line-height:1; }
+  .ms-tot { font-size:15px; color:var(--c-subtext); }
+  .ms-plabel { font-size:13px; letter-spacing:2px; color:var(--c-subtext); text-transform:uppercase; }
+  .ms-rname { font-family:"Kanit",sans-serif; font-weight:700; font-size:42px; line-height:1.04; color:var(--c-text); margin-bottom:20px; white-space:nowrap; }
+  .ms-menu { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .ms-menu li { display:flex; align-items:center; gap:9px; font-size:20px; color:var(--c-text); }
+  .ms-bullet { flex:0 0 auto; width:7px; height:7px; background:var(--c-accent); border-radius:50%; }
+  .ms-pmark { position:absolute; bottom:30px; font-size:11px; letter-spacing:3px; color:var(--c-mark); font-family:"Kanit",sans-serif; font-weight:600; }
+  /* ─── L1: Full Bleed Overlay ─── */
+  .ms-fullbleed { position:absolute; inset:0; }
+  .ms-fb-photo { position:absolute; inset:0; background-size:cover; background-position:center; }
+  .ms-fb-grad { position:absolute; inset:0; background:linear-gradient(0deg, var(--c-bg) 0%, rgba(0,0,0,.7) 35%, rgba(0,0,0,.15) 65%, rgba(0,0,0,.35) 100%); }
+  .ms-fb-content { position:absolute; bottom:0; left:0; right:0; padding:64px 80px; }
+  .ms-fb-ptop { display:flex; align-items:baseline; gap:11px; margin-bottom:12px; }
+  .ms-fb-accent { width:50px; height:3px; background:var(--c-accent); border-radius:2px; margin-bottom:16px; }
+  .ms-fb-name { font-family:"Kanit",sans-serif; font-weight:700; font-size:58px; line-height:1.04; color:var(--c-text); margin-bottom:20px; }
+  .ms-fb-menu { list-style:none; display:flex; flex-direction:row; gap:10px; flex-wrap:wrap; }
+  .ms-fb-menu li { display:flex; align-items:center; gap:8px; font-size:19px; color:var(--c-text); background:rgba(0,0,0,.4); padding:6px 18px; border-radius:24px; border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(4px); }
+  .ms-fb-menu .ms-bullet { background:var(--c-accent); }
+  .ms-fb-pmark { position:absolute; top:36px; right:48px; font-size:11px; letter-spacing:3px; color:rgba(255,255,255,.35); font-family:"Kanit",sans-serif; font-weight:600; }
+  /* ─── L2: Duo Photo ─── */
+  .ms-duo { position:absolute; inset:0; display:flex; }
+  .ms-duo-photos { width:50%; height:100%; display:flex; flex-direction:column; flex-shrink:0; }
+  .ms-duo-photo { flex:1; background-size:cover; background-position:center; position:relative; }
+  .ms-duo-photo:first-child { border-bottom:2px solid var(--c-bg); }
+  .ms-duo-scrim { position:absolute; inset:0; right:0; width:80px; right:0; background:linear-gradient(90deg, transparent, var(--c-bg)); margin-left:auto; width:100px; }
+  .ms-duo-panel { flex:1; height:100%; background:var(--c-panel); padding:59px 48px; display:flex; flex-direction:column; justify-content:center; border-left:2px solid var(--c-accent); }
+  /* ─── Brand scenes ─── */
+  .ms-brand { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; text-align:center; }
+  .ms-brand-logo { width:180px; height:auto; }
+  .ms-brand-tagline { font-family:"Kanit",sans-serif; font-weight:700; font-size:32px; line-height:1.18; color:var(--c-brand-text); }
+  .ms-brand-sub { font-size:17px; color:var(--c-brand-sub); }
+  .ms-brand-sub-big { font-family:"Kanit",sans-serif; font-weight:600; font-size:23px; color:var(--c-brand-text); }
+  .ms-brand-web { font-family:"Kanit",sans-serif; font-weight:600; font-size:15px; color:var(--c-accent); letter-spacing:2px; }
+  .ms-brand-rule { width:60px; height:2px; background:var(--c-accent); border-radius:1px; }
+  .ms-overlay { position:absolute; height:auto; z-index:50; cursor:move; touch-action:none; filter:drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
+  .ms-overlay.dragging { outline:3px solid #E0A43B; outline-offset:3px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">Food<span>Stock</span> Scene Editor<span class="title-sub">PRO</span></div>
+  <div class="header-actions">
+    <button class="action-btn secondary" onclick="regenerateVideoSource()">Regenerate</button>
+    <button class="action-btn secondary" onclick="saveToServer()">Save</button>
+    <button class="action-btn" onclick="exportJSON()">Export JSON</button>
+  </div>
+</header>
+<div id="theme-bar">
+  <span class="theme-bar-label">Theme</span>
+  <div class="theme-card active" id="tc-T0" onclick="setTheme('T0')">
+    <div class="tc-preview"><div class="tc-bg" style="background:#2A333B"></div><div class="tc-panel" style="background:#495862"></div><div class="tc-accent-strip" style="background:#E0A43B"></div></div>
+    <span class="tc-label">Dark Slate</span>
+  </div>
+  <div class="theme-card" id="tc-T1" onclick="setTheme('T1')">
+    <div class="tc-preview"><div class="tc-bg" style="background:#3D2B1F"></div><div class="tc-panel" style="background:#5C3A28"></div><div class="tc-accent-strip" style="background:#E8834A"></div></div>
+    <span class="tc-label">Warm Kitchen</span>
+  </div>
+  <div class="theme-card" id="tc-T2" onclick="setTheme('T2')">
+    <div class="tc-preview"><div class="tc-bg" style="background:#0A0A0A"></div><div class="tc-panel" style="background:#1C1C1C"></div><div class="tc-accent-strip" style="background:#E0E0E0"></div></div>
+    <span class="tc-label">Midnight Noir</span>
+  </div>
+  <div class="theme-card" id="tc-T3" onclick="setTheme('T3')">
+    <div class="tc-preview"><div class="tc-bg" style="background:#1A2820"></div><div class="tc-panel" style="background:#253D2F"></div><div class="tc-accent-strip" style="background:#5CB87A"></div></div>
+    <span class="tc-label">Forest Green</span>
+  </div>
+</div>
+<div id="layout">
+  <aside id="sidebar">
+    <div id="scene-list"></div>
+    <div id="add-btn" onclick="addScene()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="#E0A43B" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="#E0A43B" stroke-width="2" stroke-linecap="round"/></svg>
+      เพิ่ม Scene
+    </div>
+    <div id="status-bar"></div>
+  </aside>
+  <div id="content">
+    <div id="edit-panel"></div>
+    <div id="preview-pane">
+      <div class="preview-wrap" id="preview-wrap">
+        <div class="preview-inner" id="preview-inner" style="width:1920px;height:1080px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// ─── Data ────────────────────────────────────────────
+let data = [];
+let brand = {
+  intro_tagline_l1: 'มากกว่าศูนย์อาหาร',
+  intro_tagline_l2: 'คือพื้นที่แห่งความสุข',
+  intro_sub: '36 ร้านหลัก + 2 ร้านรอยืนยัน · พัฒนาการ 32',
+  outro_hours: 'เปิดบริการทุกวัน · 8:00–21:00 น.',
+  outro_addr: '471 พัฒนาการ 32 · สวนหลวง กทม.',
+  outro_web: 'foodstock.info',
+  intro_overlays: []
+};
+
+// current scene key: 'intro' | 'outro' | 'rest-{i}'
+let currentKey = 'rest-0';
+
+// ─── Theme ───────────────────────────────────────────
+const THEMES = {
+  T0: { bg:'#2A333B', panel:'#495862', accent:'#E0A43B', text:'#F5EFE6', subtext:'#C7CDD2', mark:'#5C6B75', brandBg:'#F5EFE6', brandText:'#2A333B', brandSub:'#495862' },
+  T1: { bg:'#3D2B1F', panel:'#5C3A28', accent:'#E8834A', text:'#F5EFE6', subtext:'#D4C4B8', mark:'#7A6050', brandBg:'#FFF8F0', brandText:'#3D2B1F', brandSub:'#5C3A28' },
+  T2: { bg:'#0A0A0A', panel:'#1C1C1C', accent:'#E0E0E0', text:'#E0E0E0', subtext:'#909090', mark:'#404040', brandBg:'#F0F0F0', brandText:'#0A0A0A', brandSub:'#404040' },
+  T3: { bg:'#1A2820', panel:'#253D2F', accent:'#5CB87A', text:'#E8F0EB', subtext:'#A8C0B0', mark:'#3A5545', brandBg:'#F0F7F2', brandText:'#1A2820', brandSub:'#253D2F' }
+};
+
+let currentTheme = 'T0';
+let currentPreviewScale = 1;
+let draggedSceneIndex = null;
+const legacyBadgeKey = 'promo' + '_badge';
+
+function setStatus(msg, isError=false) {
+  const el = document.getElementById('status-bar');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = isError ? '#e87070' : '#8a9ba5';
+}
+
+function normalizeLoadedData() {
+  data = Array.isArray(data) ? data : [];
+  data.forEach(r => {
+    r.menu = Array.isArray(r.menu) ? r.menu : [];
+    r.overlays = Array.isArray(r.overlays) ? r.overlays : [];
+    delete r[legacyBadgeKey];
+  });
+  brand = { ...brand, intro_overlays: [], ...(brand || {}) };
+  brand.intro_overlays = Array.isArray(brand.intro_overlays) ? brand.intro_overlays : [];
+}
+
+async function loadInitialData() {
+  try {
+    const [restaurantsRes, brandRes] = await Promise.all([
+      fetch('data/restaurants.json', { cache: 'no-store' }),
+      fetch('data/brand-config.json', { cache: 'no-store' })
+    ]);
+    if (!restaurantsRes.ok) throw new Error('restaurants.json HTTP ' + restaurantsRes.status);
+    data = await restaurantsRes.json();
+    if (brandRes.ok) brand = { ...brand, ...(await brandRes.json()) };
+    normalizeLoadedData();
+    currentKey = data.length ? 'rest-0' : 'intro';
+    buildSidebar();
+    select(currentKey);
+    setStatus(`Loaded ${data.length} ร้าน from data/`);
+  } catch (err) {
+    normalizeLoadedData();
+    currentKey = data.length ? 'rest-0' : 'intro';
+    buildSidebar();
+    select(currentKey);
+    setStatus('Load failed: ' + err.message, true);
+  }
+}
+
+function setTheme(id) {
+  currentTheme = id;
+  document.querySelectorAll('.theme-card').forEach(el => el.classList.remove('active'));
+  document.getElementById('tc-' + id).classList.add('active');
+  const s = findSceneByKey(currentKey);
+  if (!s) return;
+  if (s.type === 'intro') renderIntroPreview();
+  else if (s.type === 'outro') renderOutroPreview();
+  else renderRestPreview(s.index);
+}
+
+// ─── Layout names ─────────────────────────────────────
+const LAYOUT_LABELS = { L0: 'Split', L1: 'Full Bleed', L2: 'Duo Photo' };
+const LAYOUT_BADGE  = { L0: 'L0', L1: 'L1', L2: 'L2' };
+
+// ─── Layout SVG icons ─────────────────────────────────
+function layoutIcon(id, active) {
+  const c = active ? '#E0A43B' : '#4a5a65';
+  const bg = active ? '#2A333B' : 'transparent';
+  if (id === 'L0') return `<svg width="44" height="28" viewBox="0 0 44 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="28" rx="3" fill="${bg}"/><rect x="1" y="1" width="24" height="26" rx="2" fill="${c}" opacity=".35"/><rect x="27" y="1" width="16" height="26" rx="2" fill="${c}" opacity=".7"/><line x1="27" y1="1" x2="27" y2="27" stroke="${c}" stroke-width="1.5"/></svg>`;
+  if (id === 'L1') return `<svg width="44" height="28" viewBox="0 0 44 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="28" rx="3" fill="${c}" opacity=".35"/><rect x="0" y="16" width="44" height="12" rx="0" fill="${c}" opacity=".5"/><rect x="4" y="18" width="20" height="2" rx="1" fill="${c}"/><rect x="4" y="22" width="30" height="2" rx="1" fill="${c}" opacity=".6"/><rect x="4" y="26" width="14" height="1" rx="1" fill="${c}" opacity=".4"/></svg>`;
+  if (id === 'L2') return `<svg width="44" height="28" viewBox="0 0 44 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="28" rx="3" fill="${bg}"/><rect x="1" y="1" width="20" height="12" rx="2" fill="${c}" opacity=".35"/><rect x="1" y="15" width="20" height="12" rx="2" fill="${c}" opacity=".35"/><rect x="24" y="1" width="19" height="26" rx="2" fill="${c}" opacity=".7"/><line x1="24" y1="1" x2="24" y2="27" stroke="${c}" stroke-width="1.5"/></svg>`;
+  return '';
+}
+
+// ─── Scene list (computed) ───────────────────────────
+function getAllScenes() {
+  return [
+    { type: 'intro', key: 'intro' },
+    ...data.map((_, i) => ({ type: 'rest', key: 'rest-' + i, index: i })),
+    { type: 'outro', key: 'outro' }
+  ];
+}
+
+function findSceneByKey(key) {
+  return getAllScenes().find(s => s.key === key) || null;
+}
+
+function renderCurrentScene() {
+  const s = findSceneByKey(currentKey);
+  if (!s) return;
+  if (s.type === 'intro') renderIntroPreview();
+  else if (s.type === 'outro') renderOutroPreview();
+  else renderRestPreview(s.index);
+}
+
+// ─── Sidebar ─────────────────────────────────────────
+function buildSidebar() {
+  const n = data.length;
+  document.getElementById('scene-list').innerHTML = getAllScenes().map(s => {
+    const active = s.key === currentKey ? ' active' : '';
+    if (s.type === 'intro') {
+      return `<div class="r-item brand-item${active}" onclick="select('intro')"><span class="r-num">INTRO</span><span class="r-name">Scene เปิด</span></div>`;
+    }
+    if (s.type === 'outro') {
+      return `<div class="r-item brand-item${active}" onclick="select('outro')"><span class="r-num">OUTRO</span><span class="r-name">Scene ปิด</span></div>`;
+    }
+    const num = String(s.index + 1).padStart(2, '0');
+    const lay = data[s.index].layout || 'L0';
+    const badge = lay !== 'L0' ? `<span class="r-badge">${LAYOUT_BADGE[lay]}</span>` : '';
+    return `<div class="r-item${active}" draggable="true" data-index="${s.index}" onclick="select('rest-${s.index}')" ondragstart="sceneDragStart(event,${s.index})" ondragover="sceneDragOver(event)" ondrop="sceneDrop(event,${s.index})" ondragend="sceneDragEnd(event)"><span class="r-num">${num}</span><span class="r-name" id="sn-${s.index}">${dn(data[s.index].name)}</span>${badge}</div>`;
+  }).join('');
+  const dur = (n * 5 + 3.2 + 4.0).toFixed(1);
+  document.getElementById('status-bar').textContent = `${n} ร้าน · ${dur}s`;
+}
+
+function sceneDragStart(event, index) {
+  draggedSceneIndex = index;
+  event.currentTarget.classList.add('dragging');
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', String(index));
+}
+
+function sceneDragOver(event) {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'move';
+}
+
+function sceneDrop(event, targetIndex) {
+  event.preventDefault();
+  const from = draggedSceneIndex;
+  draggedSceneIndex = null;
+  if (from === null || from === targetIndex) return;
+  const [moved] = data.splice(from, 1);
+  data.splice(targetIndex, 0, moved);
+  currentKey = 'rest-' + targetIndex;
+  buildSidebar();
+  showRestPanel(targetIndex);
+  renderRestPreview(targetIndex);
+}
+
+function sceneDragEnd(event) {
+  event.currentTarget.classList.remove('dragging');
+  draggedSceneIndex = null;
+}
+
+// ─── Select ──────────────────────────────────────────
+function select(key) {
+  currentKey = key;
+  buildSidebar();
+  const s = findSceneByKey(key);
+  if (!s) return;
+  if (s.type === 'intro') { showIntroPanel(); renderIntroPreview(); }
+  else if (s.type === 'outro') { showOutroPanel(); renderOutroPreview(); }
+  else { showRestPanel(s.index); renderRestPreview(s.index); }
+}
+
+// ─── Add / Delete ─────────────────────────────────────
+function addScene() {
+  const i = data.length;
+  data.push({ id: `new-${Date.now()}`, name: 'ชื่อร้าน', hero_local: '', menu: ['', '', ''], layout: 'L0', overlays: [] });
+  currentKey = 'rest-' + i;
+  buildSidebar();
+  showRestPanel(i);
+  renderRestPreview(i);
+}
+
+function deleteScene(i) {
+  if (!confirm(`ลบ "${dn(data[i].name)}" ออกจาก list?`)) return;
+  data.splice(i, 1);
+  const remaining = data.length;
+  if (remaining === 0) {
+    currentKey = 'intro';
+  } else {
+    const newIdx = Math.min(i, remaining - 1);
+    currentKey = 'rest-' + newIdx;
+  }
+  buildSidebar();
+  select(currentKey);
+}
+
+// ─── Set layout ───────────────────────────────────────
+function setLayout(i, l) {
+  data[i].layout = l;
+  // rebuild layout picker icons only
+  document.querySelectorAll('.lp-opt').forEach(el => {
+    const isActive = el.dataset.layout === l;
+    el.classList.toggle('active', isActive);
+    el.querySelector('.lp-icon').innerHTML = layoutIcon(el.dataset.layout, isActive);
+  });
+  // show/hide photo2 field
+  const p2wrap = document.getElementById('photo2-wrap');
+  if (p2wrap) p2wrap.style.display = (l === 'L2') ? 'block' : 'none';
+  buildSidebar();
+  renderRestPreview(i);
+}
+
+function getOverlayList(owner, i) {
+  if (owner === 'intro') {
+    brand.intro_overlays = Array.isArray(brand.intro_overlays) ? brand.intro_overlays : [];
+    return brand.intro_overlays;
+  }
+  data[i].overlays = Array.isArray(data[i].overlays) ? data[i].overlays : [];
+  return data[i].overlays;
+}
+
+function overlayPanelHTML(owner, i) {
+  const q = v => String(v ?? '').replace(/"/g, '&quot;');
+  const overlays = getOverlayList(owner, i);
+  const ownerArg = `'${owner}'`;
+  const indexArg = owner === 'intro' ? -1 : i;
+  const rows = overlays.map((o, j) => `
+    <div class="overlay-row">
+      <input class="field-input" id="ov-${owner}-${j}-src" type="text" placeholder="overlays/file.png" value="${q(o.src || '')}" oninput="updateOverlay(${ownerArg},${indexArg},${j})"/>
+      <div class="overlay-grid">
+        <input class="field-input" id="ov-${owner}-${j}-x" type="number" step="0.01" value="${q(o.x_pct ?? 10)}" oninput="updateOverlay(${ownerArg},${indexArg},${j})"/>
+        <input class="field-input" id="ov-${owner}-${j}-y" type="number" step="0.01" value="${q(o.y_pct ?? 10)}" oninput="updateOverlay(${ownerArg},${indexArg},${j})"/>
+        <input class="field-input" id="ov-${owner}-${j}-w" type="number" step="1" min="1" value="${q(o.width_px ?? 120)}" oninput="updateOverlay(${ownerArg},${indexArg},${j})"/>
+      </div>
+      <button class="overlay-remove" onclick="removeOverlay(${ownerArg},${indexArg},${j})">Remove overlay</button>
+    </div>`).join('');
+  return `
+    <div>
+      <div class="field-label">${owner === 'intro' ? 'Intro icons' : 'Overlay images'}</div>
+      <div class="overlay-list">${rows || '<div class="hint">ยังไม่มี overlay</div>'}</div>
+      <input class="file-input" type="file" accept="image/*" onchange="uploadOverlay(${ownerArg},${indexArg},this)"/>
+      <button class="mini-btn" onclick="addOverlay(${ownerArg},${indexArg})">Add empty overlay</button>
+      <div class="hint">ลากรูปบน preview เพื่อปรับตำแหน่ง หรือแก้ x/y เป็น % ของ canvas 1920×1080</div>
+    </div>`;
+}
+
+function updateOverlay(owner, i, j) {
+  const overlays = getOverlayList(owner, i);
+  const o = overlays[j];
+  if (!o) return;
+  o.src = document.getElementById(`ov-${owner}-${j}-src`).value.trim();
+  o.x_pct = Number(document.getElementById(`ov-${owner}-${j}-x`).value) || 0;
+  o.y_pct = Number(document.getElementById(`ov-${owner}-${j}-y`).value) || 0;
+  o.width_px = Number(document.getElementById(`ov-${owner}-${j}-w`).value) || 120;
+  renderCurrentScene();
+}
+
+function addOverlay(owner, i) {
+  getOverlayList(owner, i).push({ src: '', x_pct: owner === 'intro' ? 10 : 2.08, y_pct: owner === 'intro' ? 12 : 77.77, width_px: owner === 'intro' ? 80 : 220 });
+  if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
+  renderCurrentScene();
+}
+
+function removeOverlay(owner, i, j) {
+  getOverlayList(owner, i).splice(j, 1);
+  if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
+  renderCurrentScene();
+}
+
+async function uploadAsset(type, file) {
+  const fd = new FormData();
+  fd.append('type', type);
+  fd.append('file', file);
+  const res = await fetch('/upload', { method: 'POST', body: fd });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || `Upload failed (${res.status})`);
+  return body.path;
+}
+
+async function uploadPhoto(i, input, field='hero_local') {
+  if (!input.files || !input.files[0]) return;
+  try {
+    const path = await uploadAsset('photo', input.files[0]);
+    data[i][field] = path;
+    showRestPanel(i);
+    renderRestPreview(i);
+    setStatus('Uploaded photo: ' + path);
+  } catch (err) {
+    setStatus(err.message, true);
+  } finally {
+    input.value = '';
+  }
+}
+
+async function uploadOverlay(owner, i, input) {
+  if (!input.files || !input.files[0]) return;
+  try {
+    const path = await uploadAsset('overlay', input.files[0]);
+    getOverlayList(owner, i).push({ src: path, x_pct: owner === 'intro' ? 10 : 2.08, y_pct: owner === 'intro' ? 12 : 77.77, width_px: owner === 'intro' ? 80 : 220 });
+    if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
+    renderCurrentScene();
+    setStatus('Uploaded overlay: ' + path);
+  } catch (err) {
+    setStatus(err.message, true);
+  } finally {
+    input.value = '';
+  }
+}
+
+// ─── Edit panels ─────────────────────────────────────
+function showRestPanel(i) {
+  const r = data[i];
+  const q = v => String(v).replace(/"/g, '&quot;');
+  const n = data.length;
+  const lay = r.layout || 'L0';
+
+  const pickerHTML = ['L0','L1','L2'].map(id => {
+    const isActive = id === lay;
+    return `<div class="lp-opt${isActive?' active':''}" data-layout="${id}" onclick="setLayout(${i},'${id}')">
+      <span class="lp-icon">${layoutIcon(id, isActive)}</span>
+      <span>${LAYOUT_LABELS[id]}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('edit-panel').innerHTML = `
+    <div><span class="scene-badge">${String(i+1).padStart(2,'0')} / ${n}</span></div>
+    <div>
+      <div class="field-label">รูปแบบ Layout</div>
+      <div class="layout-picker">${pickerHTML}</div>
+    </div>
+    <div><div class="field-label">ชื่อร้าน</div>
+      <input id="f-name" class="field-input" type="text" value="${q(r.name)}" oninput="updateRest(${i})"/></div>
+    <div><div class="field-label">เมนูแนะนำ (สูงสุด 3)</div>
+      <div class="menu-inputs">
+        <input id="f-m1" class="field-input" type="text" placeholder="เมนู 1" value="${q(r.menu[0]||'')}" oninput="updateRest(${i})"/>
+        <input id="f-m2" class="field-input" type="text" placeholder="เมนู 2" value="${q(r.menu[1]||'')}" oninput="updateRest(${i})"/>
+        <input id="f-m3" class="field-input" type="text" placeholder="เมนู 3" value="${q(r.menu[2]||'')}" oninput="updateRest(${i})"/>
+      </div></div>
+    <div><div class="field-label">รูปภาพหลัก (path ใน data/photos/)</div>
+      <input id="f-photo" class="field-input" type="text" placeholder="photos/xx-ชื่อร้าน.jpg" value="${q(r.hero_local)}" oninput="updateRestPhoto(${i})"/>
+      <input class="file-input" type="file" accept="image/*" onchange="uploadPhoto(${i},this,'hero_local')"/></div>
+    <div id="photo2-wrap" style="display:${lay==='L2'?'block':'none'}">
+      <div class="field-label">รูปภาพที่ 2 (L2 Duo)</div>
+      <input id="f-photo2" class="field-input" type="text" placeholder="photos/xx-ร้าน-alt.jpg" value="${q(r.hero_local_2||'')}" oninput="updateRestPhoto2(${i})"/>
+      <input class="file-input" type="file" accept="image/*" onchange="uploadPhoto(${i},this,'hero_local_2')"/>
+      <div class="hint">ถ้าว่าง จะใช้รูปหลักซ้ำ</div>
+    </div>
+    ${overlayPanelHTML('rest', i)}
+    <div class="hint">บน VPS ใช้ Save → Regenerate. Export JSON ยังใช้ได้สำหรับ backup/local copy.</div>
+    <div><button class="delete-btn" onclick="deleteScene(${i})">ลบ scene นี้</button></div>`;
+}
+
+function showIntroPanel() {
+  const q = v => String(v).replace(/"/g, '&quot;');
+  document.getElementById('edit-panel').innerHTML = `
+    <div><span class="scene-badge">INTRO</span></div>
+    <div><div class="field-label">Tagline บรรทัด 1</div>
+      <input id="f-it1" class="field-input" type="text" value="${q(brand.intro_tagline_l1)}" oninput="updateBrand()"/></div>
+    <div><div class="field-label">Tagline บรรทัด 2</div>
+      <input id="f-it2" class="field-input" type="text" value="${q(brand.intro_tagline_l2)}" oninput="updateBrand()"/></div>
+    <div><div class="field-label">Subtitle</div>
+      <input id="f-is" class="field-input" type="text" value="${q(brand.intro_sub)}" oninput="updateBrand()"/></div>
+    ${overlayPanelHTML('intro', -1)}
+    <div class="hint">Intro icons ใช้กลไก overlay เดียวกับ scene ร้าน</div>`;
+}
+
+function showOutroPanel() {
+  const q = v => String(v).replace(/"/g, '&quot;');
+  document.getElementById('edit-panel').innerHTML = `
+    <div><span class="scene-badge">OUTRO</span></div>
+    <div><div class="field-label">เวลาเปิด</div>
+      <input id="f-oh" class="field-input" type="text" value="${q(brand.outro_hours)}" oninput="updateBrand()"/></div>
+    <div><div class="field-label">ที่อยู่</div>
+      <input id="f-oa" class="field-input" type="text" value="${q(brand.outro_addr)}" oninput="updateBrand()"/></div>
+    <div><div class="field-label">Website</div>
+      <input id="f-ow" class="field-input" type="text" value="${q(brand.outro_web)}" oninput="updateBrand()"/></div>
+    <div class="hint">Export → Save <code>data/brand-config.json</code><br>แล้วรัน <code>python3 generate.py</code></div>`;
+}
+
+// ─── Update ───────────────────────────────────────────
+function updateBrand() {
+  const s = findSceneByKey(currentKey);
+  if (!s) return;
+  if (s.type === 'intro') {
+    brand.intro_tagline_l1 = document.getElementById('f-it1').value;
+    brand.intro_tagline_l2 = document.getElementById('f-it2').value;
+    brand.intro_sub = document.getElementById('f-is').value;
+    renderIntroPreview();
+  } else if (s.type === 'outro') {
+    brand.outro_hours = document.getElementById('f-oh').value;
+    brand.outro_addr = document.getElementById('f-oa').value;
+    brand.outro_web = document.getElementById('f-ow').value;
+    renderOutroPreview();
+  }
+}
+
+function updateRest(i) {
+  data[i].name = document.getElementById('f-name').value;
+  data[i].menu = [
+    document.getElementById('f-m1').value,
+    document.getElementById('f-m2').value,
+    document.getElementById('f-m3').value,
+  ].filter(Boolean);
+  const el = document.getElementById('sn-' + i);
+  if (el) el.textContent = dn(data[i].name);
+  renderRestPreview(i);
+}
+
+function updateRestPhoto(i) {
+  data[i].hero_local = document.getElementById('f-photo').value;
+  renderRestPreview(i);
+}
+
+function updateRestPhoto2(i) {
+  data[i].hero_local_2 = document.getElementById('f-photo2').value;
+  renderRestPreview(i);
+}
+
+// ─── Preview router ───────────────────────────────────
+function dn(n) {
+  return String(n).replace(/\s*Food Stock\s*พัฒนาการ\s*$/, '').replace(/\s*พัฒนาการ\s*$/, '').trim();
+}
+
+function assetUrl(src) {
+  const clean = String(src || '').replace(/\\/g, '/').replace(/^\/+/, '');
+  if (!clean) return '';
+  return clean.startsWith('data/') ? clean : 'data/' + clean;
+}
+
+function overlayMarkup(overlays) {
+  return (overlays || []).map((o, j) => {
+    if (!o || !o.src) return '';
+    const x = Number(o.x_pct) || 0;
+    const y = Number(o.y_pct) || 0;
+    const w = Number(o.width_px) || 120;
+    return `<img class="ms-overlay" data-overlay-index="${j}" src="${assetUrl(o.src)}" alt="" style="left:${x}%;top:${y}%;width:${w}px">`;
+  }).join('');
+}
+
+function attachOverlayDraggers(owner, i) {
+  document.querySelectorAll('.ms-overlay').forEach(el => {
+    el.addEventListener('pointerdown', event => startOverlayDrag(event, owner, i, Number(el.dataset.overlayIndex)));
+  });
+}
+
+function startOverlayDrag(event, owner, i, j) {
+  const overlays = getOverlayList(owner, i);
+  const overlay = overlays[j];
+  if (!overlay) return;
+  event.preventDefault();
+  const el = event.currentTarget;
+  el.classList.add('dragging');
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const startXPct = Number(overlay.x_pct) || 0;
+  const startYPct = Number(overlay.y_pct) || 0;
+
+  const onMove = e => {
+    const dx = (e.clientX - startX) / currentPreviewScale;
+    const dy = (e.clientY - startY) / currentPreviewScale;
+    overlay.x_pct = Math.max(0, Math.min(100, startXPct + (dx / 1920) * 100));
+    overlay.y_pct = Math.max(0, Math.min(100, startYPct + (dy / 1080) * 100));
+    el.style.left = overlay.x_pct.toFixed(4) + '%';
+    el.style.top = overlay.y_pct.toFixed(4) + '%';
+  };
+
+  const onUp = () => {
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    el.classList.remove('dragging');
+    if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
+    renderCurrentScene();
+  };
+
+  document.addEventListener('pointermove', onMove);
+  document.addEventListener('pointerup', onUp);
+}
+
+function renderRestPreview(i) {
+  const lay = data[i].layout || 'L0';
+  if (lay === 'L1') renderRestL1(i);
+  else if (lay === 'L2') renderRestL2(i);
+  else renderRestL0(i);
+}
+
+// ─── L0: Split Panel ──────────────────────────────────
+function renderRestL0(i) {
+  const r = data[i];
+  const side = (i % 2 === 0) ? 'left' : 'right';
+  const name = dn(r.name);
+  const menus = (r.menu || []).slice(0, 3);
+  const num = String(i + 1).padStart(2, '0');
+  const tot = data.length;
+  const photo = r.hero_local ? 'data/' + r.hero_local.replace(/\\/g, '/') : '';
+  const items = menus.map(m => `<li><span class="ms-bullet"></span>${m}</li>`).join('');
+  const bgStyle = photo ? `background-image:url('${photo}')` : 'background:#3a4750';
+  const photoDiv = `<div class="ms-photo-wrap"><div class="ms-photo" style="${bgStyle}"></div><div class="ms-scrim ${side}"></div></div>`;
+  const panel = `<div class="ms-panel ${side==='left'?'bl':'br'}"><div class="ms-ptop"><span class="ms-idx">${num}<span class="ms-tot">/${tot}</span></span><span class="ms-plabel">ร้านแนะนำ</span></div><h1 class="ms-rname">${name}</h1><ul class="ms-menu">${items}</ul><div class="ms-pmark">FOOD STOCK</div></div>`;
+  const inner = document.getElementById('preview-inner');
+  inner.className = 'preview-inner theme-' + currentTheme;
+  inner.innerHTML = `<div class="ms-split">${side==='left' ? photoDiv+panel : panel+photoDiv}</div>${overlayMarkup(r.overlays)}`;
+  scalePreview();
+  attachOverlayDraggers('rest', i);
+}
+
+// ─── L1: Full Bleed Overlay ───────────────────────────
+function renderRestL1(i) {
+  const r = data[i];
+  const name = dn(r.name);
+  const menus = (r.menu || []).slice(0, 3);
+  const num = String(i + 1).padStart(2, '0');
+  const tot = data.length;
+  const photo = r.hero_local ? 'data/' + r.hero_local.replace(/\\/g, '/') : '';
+  const bgStyle = photo ? `background-image:url('${photo}')` : 'background:#3a4750';
+  const items = menus.map(m => `<li><span class="ms-bullet"></span>${m}</li>`).join('');
+  const inner = document.getElementById('preview-inner');
+  inner.className = 'preview-inner theme-' + currentTheme;
+  inner.innerHTML = `
+    <div class="ms-fullbleed">
+      <div class="ms-fb-photo" style="${bgStyle}"></div>
+      <div class="ms-fb-grad"></div>
+      <div class="ms-fb-pmark">FOOD STOCK</div>
+      <div class="ms-fb-content">
+        <div class="ms-fb-ptop">
+          <span class="ms-idx">${num}<span class="ms-tot">/${tot}</span></span>
+          <span class="ms-plabel">ร้านแนะนำ</span>
+        </div>
+        <div class="ms-fb-accent"></div>
+        <h1 class="ms-fb-name">${name}</h1>
+        <ul class="ms-fb-menu">${items}</ul>
+      </div>
+    </div>${overlayMarkup(r.overlays)}`;
+  scalePreview();
+  attachOverlayDraggers('rest', i);
+}
+
+// ─── L2: Duo Photo ────────────────────────────────────
+function renderRestL2(i) {
+  const r = data[i];
+  const name = dn(r.name);
+  const menus = (r.menu || []).slice(0, 3);
+  const num = String(i + 1).padStart(2, '0');
+  const tot = data.length;
+  const photo1 = r.hero_local ? 'data/' + r.hero_local.replace(/\\/g, '/') : '';
+  const photo2 = (r.hero_local_2 || r.hero_local) ? 'data/' + (r.hero_local_2 || r.hero_local).replace(/\\/g, '/') : '';
+  const bg1 = photo1 ? `background-image:url('${photo1}')` : 'background:#3a4750';
+  const bg2 = photo2 ? `background-image:url('${photo2}')` : 'background:#2a333b';
+  const items = menus.map(m => `<li><span class="ms-bullet"></span>${m}</li>`).join('');
+  const inner = document.getElementById('preview-inner');
+  inner.className = 'preview-inner theme-' + currentTheme;
+  inner.innerHTML = `
+    <div class="ms-duo">
+      <div class="ms-duo-photos">
+        <div class="ms-duo-photo" style="${bg1}"><div class="ms-duo-scrim"></div></div>
+        <div class="ms-duo-photo" style="${bg2}"><div class="ms-duo-scrim"></div></div>
+      </div>
+      <div class="ms-duo-panel">
+        <div class="ms-ptop">
+          <span class="ms-idx">${num}<span class="ms-tot">/${tot}</span></span>
+          <span class="ms-plabel">ร้านแนะนำ</span>
+        </div>
+        <h1 class="ms-rname">${name}</h1>
+        <ul class="ms-menu">${items}</ul>
+        <div class="ms-pmark">FOOD STOCK</div>
+      </div>
+    </div>${overlayMarkup(r.overlays)}`;
+  scalePreview();
+  attachOverlayDraggers('rest', i);
+}
+
+function renderIntroPreview() {
+  const inner = document.getElementById('preview-inner');
+  inner.className = 'preview-inner brand-scene theme-' + currentTheme;
+  inner.innerHTML = `<div class="ms-brand"><img class="ms-brand-logo" src="data/brand/logo-darkgreen.png" alt="FoodStock"/><div class="ms-brand-tagline">${brand.intro_tagline_l1}<br>${brand.intro_tagline_l2}</div><div class="ms-brand-rule"></div><div class="ms-brand-sub">${brand.intro_sub}</div>${overlayMarkup(brand.intro_overlays)}</div>`;
+  scalePreview();
+  attachOverlayDraggers('intro', -1);
+}
+
+function renderOutroPreview() {
+  const inner = document.getElementById('preview-inner');
+  inner.className = 'preview-inner brand-scene theme-' + currentTheme;
+  inner.innerHTML = `<div class="ms-brand"><img class="ms-brand-logo" src="data/brand/logo-outro.png" alt="FoodStock"/><div class="ms-brand-sub-big">${brand.outro_hours}</div><div class="ms-brand-rule"></div><div class="ms-brand-sub">${brand.outro_addr}</div><div class="ms-brand-web">${brand.outro_web}</div></div>`;
+  scalePreview();
+}
+
+function fitRName() {
+  const inner = document.getElementById('preview-inner');
+  inner.querySelectorAll('.ms-rname, .ms-fb-name').forEach(el => {
+    el.style.fontSize = '';
+    const panel = el.closest('.ms-panel, .ms-duo-panel, .ms-fb-content');
+    if (!panel) return;
+    const maxW = panel.clientWidth - parseFloat(getComputedStyle(panel).paddingLeft) - parseFloat(getComputedStyle(panel).paddingRight);
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    while (el.scrollWidth > maxW && size > 18) { size -= 1; el.style.fontSize = size + 'px'; }
+  });
+}
+
+function scalePreview() {
+  fitRName();
+  const pane = document.getElementById('preview-pane');
+  const scale = Math.min((pane.clientWidth - 48) / 1920, (pane.clientHeight - 48) / 1080);
+  currentPreviewScale = scale || 1;
+  const wrap = document.getElementById('preview-wrap');
+  wrap.style.width = (1920 * scale) + 'px';
+  wrap.style.height = (1080 * scale) + 'px';
+  document.getElementById('preview-inner').style.transform = `scale(${scale})`;
+}
+
+// ─── Export ───────────────────────────────────────────
+function buildRestaurantsPayload() {
+  return data.map((r, i) => {
+    const pad = String(i + 1).padStart(2, '0');
+    const slug = dn(r.name).replace(/\s+/g, '-').replace(/[^\w฀-๿-]/g, '') || `scene-${pad}`;
+    const out = {
+      ...r,
+      id: r.id || `${pad}-${slug}`,
+      name: r.name,
+      hero_local: r.hero_local,
+      menu: (r.menu || []).filter(Boolean),
+      layout: r.layout || 'L0'
+    };
+    if (!out.hero_local_2) delete out.hero_local_2;
+    out.overlays = (r.overlays || []).filter(o => o && o.src).map(o => ({
+      src: o.src,
+      x_pct: Number(o.x_pct) || 0,
+      y_pct: Number(o.y_pct) || 0,
+      width_px: Number(o.width_px) || 120
+    }));
+    if (!out.overlays.length) delete out.overlays;
+    delete out[legacyBadgeKey];
+    return out;
+  });
+}
+
+function buildBrandPayload() {
+  return {
+    ...brand,
+    intro_overlays: (brand.intro_overlays || []).filter(o => o && o.src).map(o => ({
+      src: o.src,
+      x_pct: Number(o.x_pct) || 0,
+      y_pct: Number(o.y_pct) || 0,
+      width_px: Number(o.width_px) || 80
+    }))
+  };
+}
+
+function exportJSON() {
+  const dl = (name, obj) => {
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+  };
+  dl('restaurants.json', buildRestaurantsPayload());
+  setTimeout(() => dl('brand-config.json', buildBrandPayload()), 300);
+}
+
+async function saveToServer() {
+  try {
+    const res = await fetch('/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ restaurants: buildRestaurantsPayload(), brand: buildBrandPayload() })
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || `Save failed (${res.status})`);
+    setStatus('Saved restaurants.json + brand-config.json');
+  } catch (err) {
+    setStatus(err.message, true);
+  }
+}
+
+async function regenerateVideoSource() {
+  try {
+    const res = await fetch('/regenerate', { method: 'POST' });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || `Regenerate failed (${res.status})`);
+    setStatus((body.stdout || 'Regenerated index.html').trim());
+  } catch (err) {
+    setStatus(err.message, true);
+  }
+}
+
+// ─── Init ─────────────────────────────────────────────
+window.addEventListener('resize', scalePreview);
+loadInitialData();
+</script>
+</body>
+</html>

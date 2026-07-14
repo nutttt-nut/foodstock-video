@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.mp4
+index.html
+editor.html
+candidates/
+snapshots/
+contact_sheet.jpg

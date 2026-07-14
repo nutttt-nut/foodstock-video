@@ -1,0 +1,673 @@
+[
+  {
+    "id": "03-Tsukemen-gogo",
+    "name": "TSUKEMEN GOGO",
+    "hero_local": "photos/03-Tsukemen-gogo.jpg",
+    "menu": [
+      "Gyuhoruomon Tsukemen",
+      "Umakara Tsukemen Special",
+      "Tonkotsu Ramen"
+    ],
+    "layout": "L0",
+    "unit": "A1-02",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "08-แกงป่า-รามคำแหง-24",
+    "name": "แกงป่า",
+    "hero_local": "photos/08-แกงป่า-รามคำแหง-24.jpg",
+    "menu": [
+      "อาหารไทยรสจัดจ้านจากแดนใต้",
+      "รสชาตินัว แซ่บซี้ด",
+      "อบอุ่นเหมือนครัวแม่"
+    ],
+    "layout": "L0",
+    "unit": "A1-04",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "01-แชมป์-เย็นตาโฟเครื่องทอด",
+    "name": "แชมป์ เย็นตาโฟเครื่องทอด",
+    "hero_local": "photos/01-แชมป์-เย็นตาโฟเครื่องทอด.jpg",
+    "menu": [
+      "เย็นตาโฟเครื่องทอด",
+      "เย็นตาโฟทะเลเครื่องแน่นเอี๊ยดดด",
+      "เผือกทอด"
+    ],
+    "layout": "L0",
+    "unit": "A1-05",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "04-Humble-Coffee",
+    "name": "Humble Coffee",
+    "unit": "A1-05/02",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "11-ขนมจีน-4-ภาค",
+    "name": "แม่โจ้ ขนมจีน 4 ภาค",
+    "hero_local": "photos/11-ขนมจีน-4-ภาค.jpg",
+    "menu": [
+      "ขนมจีนรสเด็ด",
+      "น้ำยา 4 ภาครสเลิศ",
+      "ข้าวซอยไก่รสละมุน"
+    ],
+    "layout": "L0",
+    "unit": "B1-A03",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "06-ก-วยเต-ยวเร-อ-สามแซ-บ",
+    "name": "ก๋วยเตี๋ยวเรือ สามแซ่บ",
+    "unit": "B1-A04",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "19-มันส์หมูมันส์ไก่",
+    "name": "มันส์หมู มันส์ไก่",
+    "hero_local": "photos/19-มันส์หมูมันส์ไก่.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-A05",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "10-กินเส้นดิลิเวอรี่",
+    "name": "กินเส้น เดลิเวอรี่",
+    "hero_local": "photos/10-กินเส้นดิลิเวอรี่.jpg",
+    "menu": [
+      "ข้าวขาหมู",
+      "บะหมี่หน้าไก่",
+      "เนื้อตุ๋นนุ่มละลายในปาก"
+    ],
+    "layout": "L0",
+    "unit": "B1-A06",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "09-แม-โจ-ก-วยจ-บญวน",
+    "name": "แม่โจ้ ก๋วยจั๊บญวน",
+    "unit": "B1-A07",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "09-เลิศรส-อาหารจานเดียว",
+    "name": "เลิศรส อาหารจานเดียว",
+    "hero_local": "photos/09-เลิศรส-อาหารจานเดียว.jpg",
+    "menu": [
+      "ผัดผงกะหรี่ทะเล",
+      "แขนงหมูกรอบ",
+      "กะเพราไข่เยี่ยวม้า"
+    ],
+    "layout": "L0",
+    "unit": "B1-A09",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "15-หมูสะเต๊ะนายหงอก-บ้านสวน",
+    "name": "หมูสะเต๊ะ นายหงอก",
+    "hero_local": "photos/15-หมูสะเต๊ะนายหงอก-บ้านสวน.jpg",
+    "menu": [
+      "หมูสะเต๊ะ",
+      "หมูปิ้งนมสด",
+      "หมูปิ้งโบราณ"
+    ],
+    "layout": "L0",
+    "unit": "B1-A11",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "07-เนื้อในตำนาน",
+    "name": "เนื้อในตำนาน",
+    "hero_local": "photos/07-เนื้อในตำนาน.jpg",
+    "menu": [
+      "ก๋วยเตี๋ยวเนื้อสูตรโบราณ",
+      "เกาเหลาเนื้อสุดเข้มข้น",
+      "น้ำสมุนไพรในตำนาน"
+    ],
+    "layout": "L0",
+    "unit": "B1-A12",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "13-COCO-WALK",
+    "name": "COCO WALK",
+    "unit": "B1-A16",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "14-น-ำเต-าห-ก-นค-ปาท-องโก-Good-ฮ-อ",
+    "name": "น้ำเต้าหู้กินคู่ปาท่องโก๋ Good ฮ้อ",
+    "unit": "B1-A18",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "15-ไจแอ-น-ล-กช-นระเบ-ด",
+    "name": "ไจแอ้น ลูกชิ้นระเบิด",
+    "unit": "B1-B01",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "17-ต้าเฉินก๋วยเตี๋ยวต้มยำ",
+    "name": "ต้าเฉินก๋วยเตี๋ยวต้มยำ",
+    "hero_local": "photos/17-ต้าเฉินก๋วยเตี๋ยวต้มยำ.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-B02",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "12-โคตรกะเพราจงเจริญ",
+    "name": "โคตรกะเพราจงเจริญ",
+    "hero_local": "photos/12-โคตรกะเพราจงเจริญ.jpg",
+    "menu": [
+      "เด็ดทุกเมนูกะเพรา",
+      "เลิศทุกเมนูตามสั่ง",
+      "อร่อยติดใจสายอีทแซ่บ"
+    ],
+    "layout": "L0",
+    "unit": "B1-B03",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "18-ย่างเก่ง",
+    "name": "ย่างเก่ง",
+    "hero_local": "photos/18-ย่างเก่ง.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-B04",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "19-หย-งน-ว-Yhang-Nua",
+    "name": "หยั่งนัว Yhang Nua",
+    "unit": "B1-B05",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "06-กล้วยแขกพระราม-5",
+    "name": "กล้วยทอด พระราม5",
+    "hero_local": "photos/06-กล้วยแขกพระราม-5.jpeg",
+    "menu": [
+      "กล้วยทอด",
+      "มันทอด",
+      "เผือกทอด"
+    ],
+    "layout": "L0",
+    "unit": "B1-B06",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "21-KINBINTO-โตเก-ยว-บ-าบ-น",
+    "name": "KINBINTO โตเกียว บ้าบิ่น",
+    "unit": "B1-B10",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "22-PremiumBakery",
+    "name": "Premium Bakery",
+    "hero_local": "photos/22-PremiumBakery.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-B11",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "23-เฮงยอดผัก",
+    "name": "เฮงยอดผัก กินไม่รู้อิ่ม",
+    "hero_local": "photos/23-เฮงยอดผัก.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-B12",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "24-MARU-WAFFLE",
+    "name": "MARU WAFFLE",
+    "unit": "B1-B13",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "05-Shiba-Hokkaido-Milk-Tea-พัฒนาการ",
+    "name": "Shiba Hokkaido Milk Tea",
+    "hero_local": "photos/05-Shiba-Hokkaido-Milk-Tea-พัฒนาการ.jpeg",
+    "menu": [
+      "เมนูสุดโปรด",
+      "Coffee Series",
+      "Fruit Tea Series"
+    ],
+    "layout": "L0",
+    "unit": "B1-B14",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "26-เพาะปลา",
+    "name": "เพาะปลา",
+    "unit": "B1-B15",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "20-ห่อติ่มซำ",
+    "name": "HOR DIM SUM",
+    "hero_local": "photos/20-ห่อติ่มซำ.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-B16",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "21-พร้อมข้าวมันไก่",
+    "name": "ข้าวมันไก่พร้อม",
+    "hero_local": "photos/21-พร้อมข้าวมันไก่.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-C01",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "14-มีเรา-ครัวแกงใต้ชาววัง",
+    "name": "มีเรา ข้าวแกงใต้ชาววัง",
+    "hero_local": "photos/14-มีเรา-ครัวแกงใต้ชาววัง.jpg",
+    "menu": [
+      "อาหารระดับชาววัง",
+      "หลากหลายคละกันในหนึ่งจาน",
+      "ราคาดี รสชาติไม่แพ้ใคร"
+    ],
+    "layout": "L0",
+    "unit": "B1-C02",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "13-ครัวพิมล",
+    "name": "ครัวพิมล",
+    "hero_local": "photos/13-ครัวพิมล.jpg",
+    "menu": [
+      "ผัดไทยกุ้งสด",
+      "ผัดไทยรวมมิตร",
+      "หอยทอดหอยแมลงภู่"
+    ],
+    "layout": "L0",
+    "unit": "B1-C03",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "31-Healthy-Farm-organic-homemad",
+    "name": "@Healthy Farm organic & homemad",
+    "unit": "B1-C06",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "24-GoldenLeafEatery",
+    "name": "Golden Leaf Eatery",
+    "hero_local": "photos/24-GoldenLeafEatery.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-C07",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "33-หยาง-หยาง",
+    "name": "หยาง หยาง",
+    "unit": "B1-C09",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "16-มนตร์ส้มตำ-แซ่บถูกปาก",
+    "name": "มนตร์ส้มตำ",
+    "hero_local": "photos/16-มนตร์ส้มตำ-แซ่บถูกปาก.jpg",
+    "menu": [
+      "ส้มตำรสแซ่บ",
+      "อร่อยเหมือนโดนสะกด",
+      "กินแล้วกินอีกติดใจแน่นอน"
+    ],
+    "layout": "L0",
+    "unit": "B1-A01",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "25-ข้าวคลุกน้ำพริกทองคำ",
+    "name": "ข้าวคลุกน้ำพริก ทองคำ",
+    "hero_local": "photos/25-ข้าวคลุกน้ำพริกทองคำ.jpg",
+    "menu": [],
+    "layout": "L0",
+    "unit": "B1-A14",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "36-อน-นต-จะป-นชาเย-น",
+    "name": "อนันต์จะปั่นชาเย็น",
+    "unit": "B1-A15",
+    "hero_local": "photos/placeholder-foodstock.svg",
+    "menu": [],
+    "layout": "L0",
+    "photo_status": "placeholder",
+    "overlays": [
+      {
+        "src": "overlays/promo-thaichuaythai-60-40.png",
+        "x_pct": 2.0833,
+        "y_pct": 77.7661,
+        "width_px": 220
+      }
+    ]
+  },
+  {
+    "id": "02-จ๋าย-บะหมี่เกี๊ยว-ปู-หมูแดง",
+    "name": "Katsu Kondo",
+    "hero_local": "photos/2026-05-22-FS-KatsuKondo-43.jpg",
+    "menu": [
+      "ข้าวแกงกะหรี่หมูทอด ไข่ข้น",
+      "คัตสึดัง (ข้าวหน้าหมูทอดไข่เยิ้ม)",
+      "เซตเอบิคัตสึ เทโชกุ"
+    ],
+    "layout": "L0",
+    "unit": "pending",
+    "status": "legacy_pending_confirmation"
+  },
+  {
+    "id": "04-Yoguruto-โยกุรุโตะ-Food-Stock-พัฒนาการ",
+    "name": "Yoguruto",
+    "hero_local": "photos/04-Yoguruto-โยกุรุโตะ-Food-Stock-พัฒนาการ.jpg",
+    "menu": [
+      "เมนู Superfood Series",
+      "เมนู Avocado",
+      "อิ่ม อร่อย ทุกมื้อ"
+    ],
+    "layout": "L0",
+    "unit": "pending",
+    "status": "legacy_pending_confirmation"
+  }
+]
