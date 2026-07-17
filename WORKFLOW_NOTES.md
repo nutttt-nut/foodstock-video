@@ -11,6 +11,6 @@ Current workflow ยุ่งยาก — ต้องทำ 4 steps ทุก�
 **Pain point:** editor-pro.html data บางครั้ง out-of-sync กับ `data/restaurants.json` ทำให้ preview ไม่ตรงกับ video จริง
 
 ## Ideas ที่น่าปรับ
-- [ ] ทำให้ editor-pro.html อ่านข้อมูลจาก `data/restaurants.json` โดยตรง (fetch local) แทน baked-in
-- [ ] Script ที่รวม step 2-4 เป็นคำสั่งเดียว (`./build.sh` หรือ Makefile)
-- [ ] Auto-sync: เมื่อ Export JSON จาก editor-pro.html ให้ trigger generate.py อัตโนมัติ
+- [x] ทำให้ editor-pro.html อ่านข้อมูลจาก `data/restaurants.json` โดยตรง (fetch local) แทน baked-in — ✅ done (editor fetches JSON directly via server.py, 2026-07-17)
+- [x] Script ที่รวม step 2-4 เป็นคำสั่งเดียว (`./build.sh` หรือ Makefile) — ✅ done: `./scripts/build.sh preview|final` (2026-07-17)
+- [x] Auto-sync: เมื่อ Export JSON จาก editor-pro.html ให้ trigger generate.py อัตโนมัติ — ✅ done: Save + Regenerate endpoints in server.py (2026-07-17)
