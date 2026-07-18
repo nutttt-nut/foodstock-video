@@ -15,14 +15,9 @@ Sibling project to [`foodstock-reels`](https://github.com/nutttt-nut/foodstock-r
 ## Quick start
 
 ```bash
-python3 generate.py                                   # data/*.json -> index.html + editor.html
-npx hyperframes render index.html --fps 30 --output foodstock-loop.mp4
-```
-
-Preview render (fast, low-res):
-
-```bash
-npx hyperframes render index.html --fps 15 --scale 0.5 --output preview.mp4
+./scripts/build.sh preview          # generate → render low-res → preview.mp4
+./scripts/build.sh final            # pull VPS → generate → render 30fps → auto-versioned mp4
+./scripts/build.sh final --dry-run  # show output filename without rendering
 ```
 
 ## Structure

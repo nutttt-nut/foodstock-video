@@ -115,10 +115,12 @@ Editor actions:
 Pull VPS edits back to the local repo when ready:
 
 ```bash
-scripts/pull-foodstock-editor-data.sh
+scripts/pull-editor-data.sh
 ```
 
-This only rsyncs `/opt/foodstock-editor/data/` into `Output/foodstock-video/data/`. It does not run git commands.
+This only rsyncs `/opt/foodstock-editor/data/` into the local `data/` directory. It does not run git commands.
+
+> **กฎตายตัว:** แก้เนื้อหาบนเว็บ editor (VPS) ที่เดียวเท่านั้น — ฝั่ง local ไม่มีการแก้ data ใดๆ เป็นแค่ mirror สำหรับ render
 
 Service management on the VPS:
 
@@ -183,7 +185,7 @@ python3 generate.py
 
 Output:
 ```
-wrote index.html | 18 scenes | duration 87.2s
+wrote index.html | <N> scenes | duration <N×5+7.2>s
 wrote editor.html
 ```
 
@@ -211,10 +213,9 @@ npx hyperframes render index.html --fps 30 --output foodstock-loop.mp4
 ### 5. ตรวจ output
 
 ```
-ขนาดไฟล์:  ~80–100 MB
-ความยาว:   87.2s (16 ร้าน × 5s + intro 3.2s + outro 3s)
 Resolution: 1920×1080
 FPS:        30
+ความยาว:   ดู Duration Math ด้านล่าง (จำนวนร้าน × SCENE_HOLD + intro + outro)
 ```
 
 ---
@@ -276,17 +277,20 @@ HyperFrames จะ capture video frame ตาม timestamp อัตโนมั
 ## Key Commands
 
 ```bash
-# regenerate index.html + editor.html
+# preview render (low-res, ไม่ pull จาก VPS)
+./scripts/build.sh preview
+
+# final render (pull VPS → generate → render 30fps → auto-version)
+./scripts/build.sh final
+
+# ดูชื่อไฟล์ output ที่จะได้ โดยไม่ pull/render
+./scripts/build.sh final --dry-run
+
+# pull data จาก VPS (ทำอัตโนมัติใน build.sh final)
+scripts/pull-editor-data.sh
+
+# regenerate index.html + editor.html (ทำอัตโนมัติใน build.sh)
 python3 generate.py
-
-# render final mp4
-npx hyperframes render index.html --fps 30 --output foodstock-loop.mp4
-
-# render preview (ความละเอียดต่ำ เร็วกว่า)
-npx hyperframes render index.html --fps 15 --scale 0.5 --output preview.mp4
-
-# เปิด editor
-open editor.html
 ```
 
 ---

@@ -197,6 +197,34 @@
   </div>
 </div>
 <script>
+// ─── Dirty tracking & draft autosave ─────────────────
+let _dirty = false;
+let _draftTimer = null;
+const DRAFT_KEY = 'foodstock-editor-draft';
+
+function markDirty() {
+  _dirty = true;
+  clearTimeout(_draftTimer);
+  _draftTimer = setTimeout(saveDraft, 2000);
+}
+
+function clearDirty() {
+  _dirty = false;
+  clearTimeout(_draftTimer);
+  localStorage.removeItem(DRAFT_KEY);
+}
+
+function saveDraft() {
+  try {
+    const payload = { restaurants: buildRestaurantsPayload(), brand: buildBrandPayload() };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
+  } catch (e) { /* quota exceeded — best effort */ }
+}
+
+window.addEventListener('beforeunload', function (e) {
+  if (_dirty) { saveDraft(); e.preventDefault(); e.returnValue = ''; }
+});
+
 // ─── Data ────────────────────────────────────────────
 let data = [];
 let brand = {
@@ -244,6 +272,26 @@ function normalizeLoadedData() {
 }
 
 async function loadInitialData() {
+  const draft = localStorage.getItem(DRAFT_KEY);
+  if (draft) {
+    try {
+      const parsed = JSON.parse(draft);
+      if (confirm('มีงานยังไม่ Save จากรอบก่อน — กู้คืนไหม?')) {
+        data = parsed.restaurants || [];
+        brand = { ...brand, ...(parsed.brand || {}) };
+        normalizeLoadedData();
+        currentKey = data.length ? 'rest-0' : 'intro';
+        buildSidebar();
+        select(currentKey);
+        _dirty = true;
+        setStatus(`Restored draft (${data.length} ร้าน) — remember to Save`);
+        return;
+      }
+      localStorage.removeItem(DRAFT_KEY);
+    } catch (e) {
+      localStorage.removeItem(DRAFT_KEY);
+    }
+  }
   try {
     const [restaurantsRes, brandRes] = await Promise.all([
       fetch('data/restaurants.json', { cache: 'no-store' }),
@@ -355,6 +403,7 @@ function sceneDrop(event, targetIndex) {
   buildSidebar();
   showRestPanel(targetIndex);
   renderRestPreview(targetIndex);
+  markDirty();
 }
 
 function sceneDragEnd(event) {
@@ -381,6 +430,7 @@ function addScene() {
   buildSidebar();
   showRestPanel(i);
   renderRestPreview(i);
+  markDirty();
 }
 
 function deleteScene(i) {
@@ -395,6 +445,7 @@ function deleteScene(i) {
   }
   buildSidebar();
   select(currentKey);
+  markDirty();
 }
 
 // ─── Set layout ───────────────────────────────────────
@@ -411,6 +462,7 @@ function setLayout(i, l) {
   if (p2wrap) p2wrap.style.display = (l === 'L2') ? 'block' : 'none';
   buildSidebar();
   renderRestPreview(i);
+  markDirty();
 }
 
 function getOverlayList(owner, i) {
@@ -456,18 +508,21 @@ function updateOverlay(owner, i, j) {
   o.y_pct = Number(document.getElementById(`ov-${owner}-${j}-y`).value) || 0;
   o.width_px = Number(document.getElementById(`ov-${owner}-${j}-w`).value) || 120;
   renderCurrentScene();
+  markDirty();
 }
 
 function addOverlay(owner, i) {
   getOverlayList(owner, i).push({ src: '', x_pct: owner === 'intro' ? 10 : 2.08, y_pct: owner === 'intro' ? 12 : 77.77, width_px: owner === 'intro' ? 80 : 220 });
   if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
   renderCurrentScene();
+  markDirty();
 }
 
 function removeOverlay(owner, i, j) {
   getOverlayList(owner, i).splice(j, 1);
   if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
   renderCurrentScene();
+  markDirty();
 }
 
 async function uploadAsset(type, file) {
@@ -488,6 +543,7 @@ async function uploadPhoto(i, input, field='hero_local') {
     showRestPanel(i);
     renderRestPreview(i);
     setStatus('Uploaded photo: ' + path);
+    markDirty();
   } catch (err) {
     setStatus(err.message, true);
   } finally {
@@ -503,6 +559,7 @@ async function uploadOverlay(owner, i, input) {
     if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
     renderCurrentScene();
     setStatus('Uploaded overlay: ' + path);
+    markDirty();
   } catch (err) {
     setStatus(err.message, true);
   } finally {
@@ -595,6 +652,7 @@ function updateBrand() {
     brand.outro_web = document.getElementById('f-ow').value;
     renderOutroPreview();
   }
+  markDirty();
 }
 
 function updateRest(i) {
@@ -607,16 +665,19 @@ function updateRest(i) {
   const el = document.getElementById('sn-' + i);
   if (el) el.textContent = dn(data[i].name);
   renderRestPreview(i);
+  markDirty();
 }
 
 function updateRestPhoto(i) {
   data[i].hero_local = document.getElementById('f-photo').value;
   renderRestPreview(i);
+  markDirty();
 }
 
 function updateRestPhoto2(i) {
   data[i].hero_local_2 = document.getElementById('f-photo2').value;
   renderRestPreview(i);
+  markDirty();
 }
 
 // ─── Preview router ───────────────────────────────────
@@ -673,6 +734,7 @@ function startOverlayDrag(event, owner, i, j) {
     el.classList.remove('dragging');
     if (owner === 'intro') showIntroPanel(); else showRestPanel(i);
     renderCurrentScene();
+    markDirty();
   };
 
   document.addEventListener('pointermove', onMove);
@@ -868,6 +930,7 @@ async function saveToServer() {
     });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(body.error || `Save failed (${res.status})`);
+    clearDirty();
     setStatus('Saved restaurants.json + brand-config.json');
   } catch (err) {
     setStatus(err.message, true);
