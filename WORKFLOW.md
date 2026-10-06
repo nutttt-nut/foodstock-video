@@ -12,7 +12,7 @@
 | Tool | Version | บทบาท | Install |
 |------|---------|--------|---------|
 | **Python 3** | 3.9+ | รัน generate.py — สร้าง index.html + editor.html จาก JSON | built-in (macOS) |
-| **Node.js** | 18+ | runtime สำหรับ HyperFrames | `brew install node` |
+| **Node.js** | 22+ | runtime สำหรับ HyperFrames (render บน Mac) | `brew install node` |
 | **HyperFrames** | latest | render HTML → frame-by-frame → MP4 | `npm install -g hyperframes` |
 | **ffmpeg** | 6+ | video encoding (HyperFrames ใช้ภายใน) | `brew install ffmpeg` |
 | **Flask** | 3.x | VPS editor backend สำหรับ save/upload/regenerate | service-local venv on VPS |
@@ -38,7 +38,7 @@
 | Library | บทบาท |
 |---------|--------|
 | Vanilla JS | drag reorder, preview, upload/save controls |
-| Flask backend | writes JSON/uploads to disk when opened through SSH tunnel |
+| Flask backend | writes JSON/uploads to VPS data when opened through the authenticated public editor |
 
 ### Python stdlib (ไม่ต้อง install เพิ่ม)
 
@@ -76,20 +76,20 @@ data/ ──────────────────────┐
 - **generate.py** — อ่าน data → สร้าง `index.html` และ `editor.html`
 - **index.html** — source ของ video
 - **editor-pro.html** — browser UI สำหรับแก้ scene, reorder, upload, overlay/icon positioning
-- **server.py** — localhost-only Flask backend สำหรับ VPS editing
-- **HyperFrames** — render index.html → frame-by-frame → ffmpeg → .mp4
+- **server.py** — Flask backend ของ editor บน VPS
+- **HyperFrames** — render project directory → frame-by-frame → ffmpeg → .mp4; render บน Mac เท่านั้น (VPS ใช้ Node.js 20 ซึ่งต่ำกว่า 22)
 
 ---
 
 ## VPS Editor Flow
 
-VPS editing uses `/opt/foodstock-editor/data/` as the canonical copy while editing. The editor is public on port 8090 with Basic Auth:
+VPS editing uses `/opt/foodstock-editor/data/` as the canonical copy while editing. The editor is available at this public address behind Basic Auth:
 
 ```text
 http://152.42.197.67:8090
 ```
 
-Credentials are stored on the VPS in `/etc/foodstock-editor.env`.
+Credentials are stored on the VPS in `/etc/foodstock-editor.env`; do not copy credentials into this document. SSH tunnelling is an admin fallback only.
 
 SSH tunnel fallback/admin access:
 
@@ -97,7 +97,7 @@ SSH tunnel fallback/admin access:
 ssh -L 8090:localhost:8090 root@152.42.197.67
 ```
 
-Then open locally:
+For the admin fallback, open locally:
 
 ```text
 http://localhost:8090
@@ -134,7 +134,7 @@ systemctl restart foodstock-editor
 ```
 foodstock-video/
 ├── generate.py              # main generator
-├── server.py                # localhost-only editor backend
+├── server.py                # editor backend
 ├── index.html               # video source (auto-generated)
 ├── editor-pro.html          # VPS editor
 ├── editor.html              # basic generated editor
@@ -155,9 +155,9 @@ foodstock-video/
 
 ### 1. แก้เนื้อหา (ไม่ต้อง touch HTML)
 
-**วิธี A — ผ่าน VPS editor-pro.html (แนะนำ)**
+**วิธี A — ผ่าน editor-pro.html (แนะนำ)**
 ```
-เปิด http://localhost:8090 ผ่าน SSH tunnel
+เปิด http://152.42.197.67:8090 และเข้าสู่ระบบ Basic Auth
 → เลือก scene จาก sidebar
 → แก้ข้อความ / รูป / overlays → preview อัปเดต real-time
 → กด Save
@@ -202,9 +202,7 @@ wrote editor.html
 
 ### 4. Render เป็น MP4
 
-```bash
-npx hyperframes render index.html --fps 30 --output foodstock-loop.mp4
-```
+ใช้ `./scripts/build.sh final` บน Mac เพื่อ render final project. ห้าม render บน VPS เพราะ Node.js ที่ติดตั้งเป็น v20 และ HyperFrames ต้องใช้ Node.js 22 ขึ้นไป.
 
 ระยะเวลา: ขึ้นกับจำนวน scene และเครื่องที่ render
 
@@ -244,6 +242,8 @@ FPS:        30
 ---
 
 ## เปลี่ยน Visual Direction (Theme)
+
+Theme bar มี 4 themes และ Layout L1/L2 ใช้เปลี่ยน preview ใน editor เท่านั้น `generate.py` ไม่อ่านค่าทั้งสองส่วน ดังนั้นวิดีโอที่ render ยังคงเป็น Dark Slate + Split เสมอ.
 
 แต่ละ theme คือ CSS block ใน `generate.py` ฟังก์ชัน `scene_html()`
 
